@@ -5,6 +5,7 @@ const gameFunctions = {
     newGame: async (req, res) => {
         const { name, locked, password, active, playerLimit, startingDice } = req.body
 
+        // Checks to see if game name already exists
         const gameCheck = await Game.findOne({
             where: {
                 name: name
@@ -16,12 +17,14 @@ const gameFunctions = {
             return
         }
 
+        // Creates new game
         const game = await Game.create({
             name, password, locked, active, playerLimit, startingDice
         })
 
         console.log(game)
 
+        // Creates player and assigns game creater as host
         if (game) {
             const player = await game.createPlayer({
                 host: true,
@@ -39,6 +42,7 @@ const gameFunctions = {
     },
 
     allGames: async (req, res) => {
+        // Finds all active games
         const gameList = await Game.findAll({
             where: {
                 [Op.and]: [
@@ -51,6 +55,8 @@ const gameFunctions = {
         })
 
         console.log(gameList)
+
+        // Filters out full games
         const filteredGames = gameList.filter((game => game.players.length < game.playerLimit))
 
         res.send(filteredGames)
@@ -59,6 +65,7 @@ const gameFunctions = {
     joinGame: async (req, res) => {
         const { name, password } = req.body
 
+        // Finds game with matching name
         const findGame = await Game.findOne(
             {
                 where: {
@@ -70,8 +77,11 @@ const gameFunctions = {
             }
         )
 
+        // Checks if the passwords match
         if (findGame) {
             if (findGame.password === password) {
+
+                // If user is logged in, create player and assign to game
                 if (req.session.userId) {
                     const player = await findGame.createPlayer({
                         host: false,
@@ -82,6 +92,7 @@ const gameFunctions = {
                     res.send({ message: 'game joined', player })
                     return
                 } else {
+                    // Create temp user with unique username tied to game
                     const tempUser = await User.create({
                         username: `${findGame.name} G${findGame.players.length + 1}`,
                         password: 'guest',
