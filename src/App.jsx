@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } from 'react-router-dom'
 import Home from './Home.jsx'
-import Profile from './components/Profile.jsx'
-import Join from './components/Join.jsx'
-import Game from './components/Game.jsx'
-import Rules from './components/Rules.jsx'
+import Profile from './components/pages/Profile.jsx'
+import Join from './components/pages/Join.jsx'
+import Game from './components/pages/Game.jsx'
+import Rules from './components/pages/Rules.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(

@@ -1,5 +1,5 @@
 import React from 'react'
-import Host from './Host'
+import Host from '../Host'
 
 const Profile = () => {
   return (
