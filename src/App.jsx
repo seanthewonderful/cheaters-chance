@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } from 'react-router-dom'
-import Home from './Home.jsx'
+import Home from './components/pages/Home.jsx'
 import Profile from './components/pages/Profile.jsx'
 import Join from './components/pages/Join.jsx'
 import Game from './components/pages/Game.jsx'
