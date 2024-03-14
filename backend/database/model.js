@@ -38,7 +38,14 @@ User.init(
             attributes: {
                 exclude: ['password']
             }
-        }
+        },
+        scopes: {
+          withPassword: {
+            attributes: {
+              include: ["password"],
+            },
+          },
+        },
     }
 )
 
