@@ -16,17 +16,17 @@ app.use(session({
 
 // ACCOUNT ENDPOINTS
 const {register, login, logout, sessionCheck} = userFunctions
-app.post('/register', register)
-app.post('/login', login)
-app.get('/logout', logout)
-app.get('/sessionCheck', sessionCheck)
+app.post('/api/register', register)
+app.post('/api/login', login)
+app.get('/api/logout', logout)
+app.get('/api/sessionCheck', sessionCheck)
 
 
 // GAME ENDPOINTS
 const {newGame, allGames, joinGame, startGame} = gameFunctions
-app.post('/newGame', newGame)
-app.get('/allGames', allGames)
-app.post('/joinGame', joinGame)
-app.get('/startGame', startGame)
+app.post('/api/newGame', newGame)
+app.get('/api/allGames', allGames)
+app.post('/api/joinGame', joinGame)
+app.get('/api/startGame', startGame)
 
 ViteExpress.listen(app, 2319, () => console.log('Keep it secret, keep it safe on http://localhost:2319'))

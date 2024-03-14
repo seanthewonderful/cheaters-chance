@@ -13,7 +13,7 @@ const gameFunctions = {
         })
 
         if (gameCheck) {
-            res.send('name already in use')
+            res.status(200).send({ message: 'Name already in use' })
             return
         }
 
@@ -22,51 +22,49 @@ const gameFunctions = {
             name, password, locked, active, playerLimit, startingDice
         })
 
-        console.log(game)
-
         // Creates player and assigns game creater as host
         if (game) {
-            const player = await game.createPlayer({
+            await game.createPlayer({
                 host: true,
                 userId: req.session.userId
             })
 
-            console.log(player)
-
-            res.send({ game, message: 'it worked' })
+            res.status(200).send({ message: 'Game created', game })
             return
         }
 
-        res.send('game creation failed')
-
+        res.status(400).send({ message: 'Game creation failed' })
     },
 
     allGames: async (req, res) => {
         // Finds all active games
         const gameList = await Game.findAll({
             where: {
-                [Op.and]: [
-                    { active: true }
-                ]
+                active: true
             },
             include: {
                 model: Player
             }
         })
 
-        console.log(gameList)
+        if (gameList) {
+            console.log(gameList)
 
-        // Filters out full games
-        const filteredGames = gameList.filter((game => game.players.length < game.playerLimit))
+            // Filters out full games
+            const filteredGames = gameList.filter((game => game.players.length < game.playerLimit))
 
-        res.send(filteredGames)
+            res.status(200).send({ message: 'Active games found', filteredGames })
+            return
+        }
+
+        res.status(400).send({ message: "There are no open games" })
     },
 
     joinGame: async (req, res) => {
         const { name, password } = req.body
 
         // Finds game with matching name
-        const findGame = await Game.findOne(
+        const foundGame = await Game.findOne(
             {
                 where: {
                     name: name
@@ -78,47 +76,43 @@ const gameFunctions = {
         )
 
         // Checks if the passwords match
-        if (findGame) {
-            if (findGame.password === password) {
+        if (foundGame) {
+            if (foundGame.password === password) {
 
                 // If user is logged in, create player and assign to game
                 if (req.session.userId) {
-                    const player = await findGame.createPlayer({
+                    const player = await foundGame.createPlayer({
                         host: false,
                         userId: req.session.userId
                     })
 
-                    console.log(player)
-                    res.send({ message: 'game joined', player })
+                    res.send({ message: 'Game joined', player })
                     return
                 } else {
+
                     // Create temp user with unique username tied to game
                     const tempUser = await User.create({
-                        username: `${findGame.name} G${findGame.players.length + 1}`,
+                        username: `${foundGame.name} G${foundGame.players.length + 1}`,
                         password: 'guest',
                         imgUrl: 'guest.jpg'
                     })
 
-                    const player = await findGame.createPlayer({
+                    const player = await foundGame.createPlayer({
                         host: false,
                         userId: tempUser.userId,
-
                     })
 
-                    console.log(player)
-                    res.send({ message: 'guest game joined', player })
+                    res.status(200).send({ message: 'Game joined as guest', player })
                     return
                 }
             }
-
         }
 
-        res.send('game not found')
-
+        res.status(400).send({ message: 'Game not found' })
     },
 
     startGame: async (req, res) => {
-        res.send('it worked')
+        res.status(200).send({ message: 'Game started' })
     },
 }
 

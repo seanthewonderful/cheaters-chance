@@ -4,15 +4,30 @@ const userFunctions = {
     register: async (req, res) => {
         const { username, password, imgUrl } = req.body
 
-        let newUser = await User.create({
-            username, password, imgUrl
-        })
-        res.send({ message: 'it worked', newUser })
+        const userCheck = await User.findOne(
+            {
+                where: {
+                    username: username
+                }
+            }
+        )
+
+        if(userCheck){
+            let newUser = await User.create({
+                username, password, imgUrl
+            })
+
+            res.status(200).send({ message: 'Registration successful', newUser })
+            return
+        }
+
+        res.status(400).send({message: 'Username already exists'})
+
     },
     login: async (req, res) => {
         const { username, password } = req.body
 
-        const foundUser = await User.findOne({
+        const foundUser = await User.scope('withPassword').findOne({
             where: {
                 username: username
             }
@@ -22,12 +37,12 @@ const userFunctions = {
             if (foundUser.password === password) {
                 req.session.userId = foundUser.userId
                 req.session.username = foundUser.username
-                res.send({ message: 'login successful' })
+                res.status(200).send({ message: 'Login successful' })
                 return
             }
         }
 
-        res.send({ message: 'username or password incorrect' })
+        res.status(400).send({ message: 'Username or password incorrect' })
 
     },
 
@@ -35,14 +50,14 @@ const userFunctions = {
         console.log(req.session)
         req.session.destroy()
         console.log(req.session)
-        res.send('Logout successful')
+        res.status(200).send('Logout successful')
     },
 
     sessionCheck: async (req, res) => {
         if (req.session.userId) {
-            res.send({ userId: req.session.userId })
+            res.status(200).send({ message: 'Session check success', userId: req.session.userId })
         } else {
-            res.send("No user logged in")
+            res.status(400).send("No user logged in")
         }
     },
 }
