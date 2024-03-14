@@ -16,4 +16,18 @@ app.use(
   })
 );
 
+app.post('/api/register', (req, res) => {
+  console.log(req.body);
+  res.status(200).send({
+    message: 'Register Successful'
+  })
+})
+
+app.post('/api/login', (req, res) => {
+  console.log(req.body);
+  res.status(200).send({
+    message: 'Login Successful'
+  })
+})
+
 ViteExpress.listen(app, 9987, () => console.log('Cheat here - http://localhost:9987'))

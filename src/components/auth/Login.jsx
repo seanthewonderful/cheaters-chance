@@ -1,19 +1,52 @@
-import React from 'react'
+import { useState } from "react"
+import axios from 'axios'
+import { useNavigate } from "react-router-dom"
+const Login = ({ registerModal, setRegisterModal }) => {
 
-const Login = ({ registerClick }) => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const navigate = useNavigate()
+
+  const handleLogin = (e) => {
+    e.preventDefault()
+
+    const body = {
+      username,
+      password,
+    }
+
+    axios.post(`/api/login`, body)
+    .then(res => {
+      alert('Login Successful')
+      navigate('/profile')
+    })
+  }
 
   return (
     <div>
 
-      <form>
+      <form onSubmit={handleLogin}>
+        <h2>Login</h2>
         <label>Username: </label>
-        <input type="text" name="username" />
+        <input 
+          type="text" 
+          name="username" 
+          onChange={e => setUsername(e.target.value)}
+        />
         <label>Password: </label>
-        <input type="password" name="password" />
+        <input 
+          type="password" 
+          name="password" 
+          onChange={e => setPassword(e.target.value)}
+        />
         <input type='submit' value='Login' />
       </form>
-      
-      <button onClick={registerClick}>Register</button>
+
+      <button 
+        onClick={() => setRegisterModal(!registerModal)}
+        >Register
+      </button>
 
     </div>
   )
