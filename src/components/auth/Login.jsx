@@ -1,6 +1,7 @@
 import { useState } from "react"
 import axios from 'axios'
 import { useNavigate } from "react-router-dom"
+import { useDispatch } from "react-redux"
 
 const Login = ({ registerClick }) => {
 
@@ -8,6 +9,7 @@ const Login = ({ registerClick }) => {
   const [password, setPassword] = useState('')
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const handleLogin = (e) => {
     e.preventDefault()
@@ -19,9 +21,14 @@ const Login = ({ registerClick }) => {
 
     axios.post(`/api/login`, body)
     .then(res => {
-      alert('Login Successful')
+      alert(res.data.message)
+      dispatch({
+        type: 'SET_USER',
+        payload: res.data.user
+      })
       navigate('/profile')
     })
+    .catch(err => console.log(err))
   }
 
   return (

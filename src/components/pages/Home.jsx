@@ -1,10 +1,18 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
 import Modal from '../Modal.jsx'
+import sessionCheck from '../../functions/sessionCheck.js'
 
 const Home = () => {
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const user = useSelector(state => state.user)
+
+  console.log(user)
 
   const [modalOpen, setModalOpen] = useState(false)
   const [register, setRegister] = useState(false)
@@ -25,6 +33,10 @@ const Home = () => {
   const playAsGuest = () => {
     navigate('/join')
   }
+
+  useEffect(() => {
+    sessionCheck(dispatch)
+  }, [])
 
   return (
     <div id='home-div'>

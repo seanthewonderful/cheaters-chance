@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import axios from 'axios'
 
 const Register = ({ loginClick }) => {
@@ -10,9 +11,15 @@ const Register = ({ loginClick }) => {
   const [imgUrl, setImgUrl] = useState('')
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const handleRegister = (e) => {
     e.preventDefault()
+
+    if (password !== confirmPassword){
+      alert('Passwords do not match')
+      return
+    }
 
     const body = {
       username,
@@ -23,8 +30,13 @@ const Register = ({ loginClick }) => {
     axios.post(`/api/register`, body)
     .then(res => {
       alert(res.data.message)
+      dispatch({
+        type: 'SET_USER',
+        payload: res.data.newUser
+      })
       navigate('/profile')
     })
+    .catch(err => console.log(err))
   }
 
   return (
@@ -51,7 +63,11 @@ const Register = ({ loginClick }) => {
           onChange={e => setConfirmPassword(e.target.value)}
         />
         <label>Image URL: </label>
-        <input type="text" name="imageURL" />
+        <input 
+          type="text" 
+          name="imageURL" 
+          onChange={e => setImgUrl(e.target.value)}
+        />
         <input type='submit' value='Register' />
       </form>
 
