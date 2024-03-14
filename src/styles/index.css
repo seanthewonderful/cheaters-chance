@@ -1,0 +1,12 @@
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1em;
+  border-radius: 8px;
+  border: 2px solid #a65522;
+  background-color: #00855f;
+  color: #bf1c1a;
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.1);
+}

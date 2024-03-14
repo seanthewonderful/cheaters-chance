@@ -2,10 +2,11 @@ import React from 'react'
 import { useState } from 'react'
 import Login from '../auth/Login.jsx'
 import Register from '../auth/Register.jsx'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
 
-  console.log("Home")
+  const navigate = useNavigate()
 
   const [buttonClicked, setButtonClicked] = useState(false)
   const [register, setRegister] = useState(false)
@@ -20,6 +21,10 @@ const Home = () => {
     setRegister(true)
   }
 
+  const playAsGuest = () => {
+    setButtonClicked(false)
+    navigate('/join')
+  }
 
   return (
     <div id='home-div'>
@@ -34,14 +39,22 @@ const Home = () => {
         ) : (
         <>
         {register ? (
-            <Register setRegister={setRegister} />
+            <Register loginClick={loginClick} />
           ) : (
-            <Login setRegister={setRegister} />
+            <Login registerClick={registerClick} />
             )
           }
         </>
         )
       }
+      </div>
+
+      <div>
+        <button onClick={playAsGuest}>Play as Guest</button>
+      </div>
+
+      <div>
+        <button onClick={() => navigate('/rules')}>How to Play</button>
       </div>
 
     </div>
