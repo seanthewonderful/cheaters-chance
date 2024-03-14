@@ -36,7 +36,7 @@ User.init(
         sequelize: db,
         defaultScope: {
             attributes: {
-                exclude: [password]
+                exclude: ['password']
             }
         }
     }
