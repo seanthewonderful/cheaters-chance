@@ -1,9 +1,6 @@
-import React from 'react'
 import { useState } from 'react'
-import Login from '../auth/Login.jsx'
-import Register from '../auth/Register.jsx'
-import Modal from '../Modal.jsx'
 import { useNavigate } from 'react-router-dom'
+import Modal from '../Modal.jsx'
 
 const Home = () => {
 
@@ -33,20 +30,13 @@ const Home = () => {
     <div id='home-div'>
       <h1>Cheater's Chance</h1>
 
-      {register && (
-        <Modal 
-          isOpen={modalOpen} 
-          onClose={closeModal} 
-          register={true} 
-        />
-      )}
-      {!register && (
-        <Modal 
-          isOpen={modalOpen} 
-          onClose={closeModal} 
-          register={false} 
-        />
-      )}
+      <Modal 
+        isOpen={modalOpen} 
+        onClose={closeModal} 
+        register={register} 
+        loginClick={loginClick}
+        registerClick={registerClick}
+      />
 
       <div>
         <button onClick={loginClick}>Login</button>

@@ -1,29 +1,32 @@
-import { useState } from "react";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 
-const Modal = ({ isOpen, onClose, register }) => {
-
-  const [registerModal, setRegisterModal] = useState(register);
+const Modal = ({ isOpen, onClose, register, loginClick, registerClick }) => {
 
   if (!isOpen) return null;
 
   return (
-    <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', zIndex: 1000 }}>
+    <div style={{ 
+      position: 'fixed', 
+      top: '50%', 
+      left: '50%', 
+      transform: 'translate(-50%, -50%)', 
+      backgroundColor: 'white', 
+      padding: '20px', 
+      zIndex: 1000 
+      }}>
+        <button onClick={onClose}>Close</button>
 
-      {!registerModal && (
+      {!register && (
         <Login 
-          registerModal={registerModal}
-          setRegisterModal={setRegisterModal} 
+          registerClick={registerClick}
         />
       )}
-      {registerModal && (
+      {register && (
         <Register 
-          registerModal={registerModal}
-          setRegisterModal={setRegisterModal} 
+          loginClick={loginClick}
         />
       )}
-      <button onClick={onClose}>Close</button>
     </div>
   );
 };

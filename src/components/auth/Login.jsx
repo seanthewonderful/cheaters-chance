@@ -1,7 +1,8 @@
 import { useState } from "react"
 import axios from 'axios'
 import { useNavigate } from "react-router-dom"
-const Login = ({ registerModal, setRegisterModal }) => {
+
+const Login = ({ registerClick }) => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -43,8 +44,9 @@ const Login = ({ registerModal, setRegisterModal }) => {
         <input type='submit' value='Login' />
       </form>
 
+      <p>Need to create a new account?</p>
       <button 
-        onClick={() => setRegisterModal(!registerModal)}
+        onClick={registerClick}
         >Register
       </button>
 
