@@ -76,7 +76,7 @@ const gameFunctions = {
         )
 
         // Checks if the passwords match
-        if (foundGame) {
+        if (foundGame && foundGame.host !== req.session.userId) {
             if (foundGame.password === password) {
 
                 // If user is logged in, create player and assign to game
