@@ -1,11 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import Modal from '../Modal.jsx'
+import sessionCheck from '../../functions/sessionCheck.js'
 
 const Home = () => {
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
+  const user = useSelector(state => state.user)
   const [modalOpen, setModalOpen] = useState(false)
   const [register, setRegister] = useState(false)
 
@@ -25,6 +29,10 @@ const Home = () => {
   const playAsGuest = () => {
     navigate('/join')
   }
+
+  useEffect(() => {
+    sessionCheck(dispatch)
+  }, [])
 
   return (
     <div id='home-div'>
@@ -50,8 +58,19 @@ const Home = () => {
       <div>
         <button 
           onClick={() => navigate('/rules')}
-          >How to Play
+          >
+            How to Play
         </button>
+      </div>
+
+      <div>
+      {user &&
+        <button
+        onClick={() => navigate('/profile')}
+        >
+          Profile
+        </button>
+      }
       </div>
 
     </div>

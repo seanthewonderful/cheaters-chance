@@ -1,65 +1,93 @@
-import { User } from '../../database/model.js'
+import {
+  User
+} from '../../database/model.js'
 
 const userFunctions = {
-    register: async (req, res) => {
-        const { username, password, imgUrl } = req.body
+  register: async (req, res) => {
+    const {
+      username,
+      password,
+      imgUrl
+    } = req.body
 
-        const userCheck = await User.findOne(
-            {
-                where: {
-                    username: username
-                }
-            }
-        )
+    const userCheck = await User.findOne({
+      where: {
+        username: username
+      }
+    })
 
-        if(userCheck){
-            let newUser = await User.create({
-                username, password, imgUrl
-            })
+    if (!userCheck) {
+      let newUser = await User.create({
+        username,
+        password,
+        imgUrl
+      })
 
-            res.status(200).send({ message: 'Registration successful', newUser })
-            return
-        }
+      await newUser.reload()
 
-        res.status(400).send({message: 'Username already exists'})
+      req.session.user = newUser
 
-    },
-    login: async (req, res) => {
-        const { username, password } = req.body
+      res.status(200).send({
+        message: 'Registration successful',
+        newUser
+      })
+      return
+    }
 
-        const foundUser = await User.scope('withPassword').findOne({
-            where: {
-                username: username
-            }
-        })
+    res.status(400).send({
+      message: 'Username already exists'
+    })
 
-        if (foundUser) {
-            if (foundUser.password === password) {
-                req.session.userId = foundUser.userId
-                req.session.username = foundUser.username
-                res.status(200).send({ message: 'Login successful' })
-                return
-            }
-        }
+  },
+  login: async (req, res) => {
+    const {
+      username,
+      password
+    } = req.body
 
-        res.status(400).send({ message: 'Username or password incorrect' })
+    const foundUser = await User.findOne({
+      where: {
+        username: username,
+        password: password
+      }
+    })
 
-    },
+    if (foundUser) {
+      req.session.user = foundUser
 
-    logout: async (req, res) => {
-        console.log(req.session)
-        req.session.destroy()
-        console.log(req.session)
-        res.status(200).send('Logout successful')
-    },
+      res.status(200).send({
+        message: 'Login successful',
+        user: foundUser
+      })
+      return
+    }
 
-    sessionCheck: async (req, res) => {
-        if (req.session.userId) {
-            res.status(200).send({ message: 'Session check success', userId: req.session.userId })
-        } else {
-            res.status(400).send("No user logged in")
-        }
-    },
+    res.status(400).send({
+      message: 'Username or password incorrect'
+    })
+
+  },
+
+  logout: async (req, res) => {
+    console.log(req.session)
+    req.session.destroy()
+    console.log(req.session)
+    res.status(200).send('Logout successful')
+  },
+
+  sessionCheck: async (req, res) => {
+    console.log("sessionCheck hit")
+
+    if (req.session.user) {
+      res.status(200).send({
+        message: 'Session check success',
+        user: req.session.user
+      })
+      return
+    } else {
+      res.status(204).send({ message: "No user logged in" })
+    }
+  },
 }
 
 export default userFunctions

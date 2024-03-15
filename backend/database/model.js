@@ -42,7 +42,7 @@ User.init(
         scopes: {
           withPassword: {
             attributes: {
-              include: ["password"],
+              include: ['password'],
             },
           },
         },
