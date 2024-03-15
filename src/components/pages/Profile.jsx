@@ -34,7 +34,11 @@ const Profile = () => {
 
   return user && (
     <div>
-      <HostModal isOpen={modalOpen} closeModal={closeModal} />
+      <HostModal 
+        isOpen={modalOpen} 
+        closeModal={closeModal} 
+        user={user} 
+      />
 
       <button onClick={() => navigate('/')}>Home</button>
       <button onClick={logoutClick}>Logout</button>

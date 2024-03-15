@@ -1,18 +1,37 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import axios from 'axios';
+import toTitleCase from '../functions/toTitleCase.js'
+import { useNavigate } from 'react-router-dom';
 
-const HostModal = ({ isOpen, closeModal }) => {
+const HostModal = ({ isOpen, closeModal, user }) => {
 
   if (!isOpen) return null;
 
-  const [gameName, setGameName] = useState('')
-  const [playerLimit, setPlayerLimit] = useState(4)
+  const [gameName, setGameName] = useState(`${toTitleCase(user.username)}s Game`)
+  const [playerLimit, setPlayerLimit] = useState(6)
   const [startingDice, setStartingDice] = useState(5)
   const [gamePassword, setGamePassword] = useState({ required: false, password: '' })
+
+  const navigate = useNavigate()
 
   const createGame = (e) => {
     e.preventDefault()
 
-    console.log("Game created! Well, not really")
+    const body = {
+      gameName,
+      playerLimit,
+      startingDice,
+      locked: gamePassword.required,
+      password: gamePassword
+    }
+
+    axios.post(`/api/newGame`, body)
+    .then(res => {
+      console.log(res.data.message)
+       closeModal()
+       navigate('/scuttlebutt/profile')
+     })
+    .catch(err => console.log(err))
   }
 
   return (
@@ -35,7 +54,8 @@ const HostModal = ({ isOpen, closeModal }) => {
           type="text" 
           name="gameName" 
           id="gameNameInput" 
-          placeholder='Name your game' 
+          placeholder='Name your game'
+          value={gameName}
           onChange={e => setGameName(e.target.value)}
         />
         
@@ -62,23 +82,29 @@ const HostModal = ({ isOpen, closeModal }) => {
         )}
 
         <label htmlFor="playerLimitInput">Player Limit:</label>
-        <input 
-          type="number"
-          name="playerLimitInput"
-          id="playerLimitInput"
-          placeholder='Number of players'
+        <select 
+          name="playerLimit"
+          id="playerLimit"
+          value={playerLimit}
           onChange={e => setPlayerLimit(e.target.value)}
-        />
+        >
+          {Array.from({length: 6}, (_, i) => i + 1).map(limit => (
+            <option key={`${limit}players`} value={limit}>{limit}</option>
+          ))}
+        </select>
 
-        <label htmlFor="startingDiceInput">Starting Dice:</label>
-        <input
-          type="number"
-          name="startingDiceInput"
-          id="startingDiceInput"
-          placeholder='Number of dice to roll'
+        <label htmlFor="startingDice">Starting Dice:</label>
+        <select
+          name="startingDice"
+          id="startingDice"
+          value={startingDice}
           onChange={e => setStartingDice(e.target.value)}
-        />
-        
+        >
+          {Array.from({length: 10}, (_, i) => i + 1).map(dice => (
+            <option key={`${dice}dice`} value={dice}>{dice}</option>
+          ))}
+        </select>
+
         <button type="submit">Create Game</button>
       </form>
 
