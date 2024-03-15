@@ -1,9 +1,30 @@
-import React from 'react'
+import {useState, useEffect} from 'react'
+import JoinModal from './JoinModal'
+
+const GameListItem = ({game}) => {
+
+  const [showModal, setShowModal] = useState(false)
+
+  game.name = game.name.replace("''", "'")
+
+  const toggleModal = () => {
+    setShowModal(!showModal)
+  }
+
+  const handleClick = () => {
+    toggleModal()
+  }
 
 
-const GameListItem = () => {
   return (
-    <div>GameListItem</div>
+    <>
+      <div className='gameListItem' key={game.gameId} onClick={handleClick}>
+        <p>Name: {game.name}</p>
+        <p>Players: {game.players.length}/{game.playerLimit}</p>
+        <p>Starting Dice: {game.startingDice}</p>
+      </div>
+      {showModal && <JoinModal game={game} toggleModal={toggleModal}/>}
+    </>
   )
 }
 
