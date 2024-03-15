@@ -4,35 +4,35 @@ import toTitleCase from '../functions/toTitleCase.js'
 import { useNavigate } from 'react-router-dom';
 
 const HostModal = ({ isOpen, closeModal, user }) => {
-
-  if (!isOpen) return null;
-
+  
   const [gameName, setGameName] = useState(`${toTitleCase(user.username)}s Game`)
   const [playerLimit, setPlayerLimit] = useState(6)
   const [startingDice, setStartingDice] = useState(5)
   const [gamePassword, setGamePassword] = useState({ required: false, password: '' })
-
+  
   const navigate = useNavigate()
-
+  
   const createGame = (e) => {
     e.preventDefault()
-
+    
     const body = {
-      gameName,
-      playerLimit,
-      startingDice,
+      name: gameName,
+      playerLimit: playerLimit,
+      startingDice: startingDice,
       locked: gamePassword.required,
-      password: gamePassword
+      password: gamePassword.password
     }
-
+    
     axios.post(`/api/newGame`, body)
     .then(res => {
       console.log(res.data.message)
-       closeModal()
-       navigate('/scuttlebutt/profile')
-     })
+      closeModal()
+      navigate('/scuttlebutt/profile')
+    })
     .catch(err => console.log(err))
   }
+  
+  if (!isOpen) return null;
 
   return (
     <div style={{ 
@@ -77,6 +77,8 @@ const HostModal = ({ isOpen, closeModal, user }) => {
             name="gamePasswordInput" 
             id="gamePasswordInput" 
             placeholder='Game password' 
+            value={gamePassword.password}
+            onChange={e => setGamePassword({...gamePassword, password: e.target.value })}
           />
           </>
         )}
