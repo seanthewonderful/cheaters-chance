@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import Host from '../Host'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import sessionCheck from '../../functions/sessionCheck'
@@ -10,12 +9,15 @@ const Profile = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    sessionCheck(dispatch)
+  useEffect(() => async () => {
+    if (!await sessionCheck(dispatch)) {
+      navigate('/')
+    }
   }, [])
 
   return user && (
     <div>
+      <button onClick={() => navigate('/')}>Home</button>
       <h1>Profile</h1>
       <h4>Welcome, {user.username}</h4>
     </div>

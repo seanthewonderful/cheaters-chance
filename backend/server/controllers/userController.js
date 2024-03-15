@@ -72,7 +72,9 @@ const userFunctions = {
 
   logout: async (req, res) => {
     req.session.destroy()
-    res.status(200).send('Logout successful')
+    res.status(200).send({
+      message: 'Logout successful'
+    })
   },
 
   sessionCheck: async (req, res) => {
