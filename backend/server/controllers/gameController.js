@@ -3,12 +3,13 @@ import { Op } from 'sequelize'
 
 const gameFunctions = {
     newGame: async (req, res) => {
-        const { name, locked, password, active, playerLimit, startingDice } = req.body
+        let { name, locked, password, playerLimit, startingDice } = req.body
 
         // Checks to see if game name already exists
         const gameCheck = await Game.findOne({
             where: {
-                name: name
+                name: name,
+                active: true
             }
         })
 
@@ -16,6 +17,8 @@ const gameFunctions = {
             res.status(200).send({ message: 'Name already in use' })
             return
         }
+
+        name = name.replace("'","''")
 
         // Creates new game
         const game = await Game.create({
@@ -62,12 +65,14 @@ const gameFunctions = {
 
     joinGame: async (req, res) => {
         const { name, password } = req.body
+        console.log(req.body)
 
         // Finds game with matching name
         const foundGame = await Game.findOne(
             {
                 where: {
-                    name: name
+                    name: name,
+                    password: password
                 },
                 include: {
                     model: Player
@@ -76,7 +81,7 @@ const gameFunctions = {
         )
 
         // Checks if the passwords match
-        if (foundGame && foundGame.host !== req.session.userId) {
+        if (foundGame) {
             if (foundGame.password === password) {
 
                 // If user is logged in, create player and assign to game
