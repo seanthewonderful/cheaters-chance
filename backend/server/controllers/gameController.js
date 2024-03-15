@@ -14,7 +14,7 @@ const gameFunctions = {
         })
 
         if (gameCheck) {
-            res.status(200).send({ message: 'Name already in use' })
+            res.status(400).send({ message: 'Name already in use' })
             return
         }
 
@@ -22,7 +22,7 @@ const gameFunctions = {
 
         // Creates new game
         const game = await Game.create({
-            name, password, locked, active, playerLimit, startingDice
+            name, password, locked, playerLimit, startingDice
         })
 
         // Creates player and assigns game creater as host
@@ -32,7 +32,7 @@ const gameFunctions = {
                 userId: req.session.userId
             })
 
-            res.status(200).send({ message: 'Game created', game })
+            res.status(201).send({ message: 'Game created', game })
             return
         }
 
