@@ -37,7 +37,7 @@ const Home = () => {
   }
 
   const playAsGuest = () => {
-    navigate('/join')
+    navigate('/scuttlebutt/join')
   }
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const Home = () => {
 
       <div>
         <button 
-          onClick={() => navigate('/rules')}
+          onClick={() => navigate('/scuttlebutt/rules')}
           >
             How to Play
         </button>
@@ -77,7 +77,7 @@ const Home = () => {
       <div>
       {user &&
         <button
-        onClick={() => navigate('/profile')}
+        onClick={() => navigate('/scuttlebutt/profile')}
         >
           Profile
         </button>

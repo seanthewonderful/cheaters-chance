@@ -86,7 +86,9 @@ const userFunctions = {
       })
       return
     } else {
-      res.status(204).send({ message: "No user logged in" })
+      res.status(204).send({ 
+        message: "No user logged in" 
+      })
     }
   },
 }
