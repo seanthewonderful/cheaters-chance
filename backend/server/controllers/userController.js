@@ -3,6 +3,7 @@ import {
 } from '../../database/model.js'
 
 const userFunctions = {
+
   register: async (req, res) => {
     const {
       username,
@@ -39,6 +40,7 @@ const userFunctions = {
     })
 
   },
+
   login: async (req, res) => {
     const {
       username,
@@ -69,14 +71,11 @@ const userFunctions = {
   },
 
   logout: async (req, res) => {
-    console.log(req.session)
     req.session.destroy()
-    console.log(req.session)
     res.status(200).send('Logout successful')
   },
 
   sessionCheck: async (req, res) => {
-    console.log("sessionCheck hit")
 
     if (req.session.user) {
       res.status(200).send({
