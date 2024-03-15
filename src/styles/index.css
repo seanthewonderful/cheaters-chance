@@ -10,3 +10,36 @@ form {
   color: #bf1c1a;
   box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.1);
 }
+
+.gameListItem{
+  display:flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width:50vw;
+  height:50px;
+  border: 1px black solid;
+  margin: 20px;
+}
+
+.joinModal {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  background-color: rgba(0,0,0,0.3);
+  width:100vw;
+  height: 100vh;
+  z-Index: 1000
+}
+
+.modalSection {
+  width: 30vw;
+  height:40vh;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

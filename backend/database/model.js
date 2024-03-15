@@ -77,7 +77,8 @@ Game.init(
         },
         active: {
             type: DataTypes.BOOLEAN,
-            allowNull: false
+            allowNull: false,
+            defaultValue: true
         },
         playerLimit: {
             type: DataTypes.INTEGER,
