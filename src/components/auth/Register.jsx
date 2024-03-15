@@ -34,7 +34,7 @@ const Register = ({ loginClick }) => {
         type: 'SET_USER',
         payload: res.data.newUser
       })
-      navigate('/profile')
+      navigate('/scuttlebutt/profile')
     })
     .catch(err => console.log(err))
   }

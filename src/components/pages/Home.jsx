@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Modal from '../Modal.jsx'
 import sessionCheck from '../../functions/sessionCheck.js'
+import axios from 'axios'
 
 const Home = () => {
 
@@ -26,8 +27,17 @@ const Home = () => {
     setRegister(true)
   }
 
+  const logoutClick = () => {
+    axios.get(`/api/logout`)
+    .then(res => {
+      if (res.status === 200) {
+        window.location.reload()
+      }
+    })
+  }
+
   const playAsGuest = () => {
-    navigate('/join')
+    navigate('/scuttlebutt/join')
   }
 
   useEffect(() => {
@@ -49,6 +59,7 @@ const Home = () => {
       <div>
         <button onClick={loginClick}>Login</button>
         <button onClick={registerClick}>Register</button>
+        <button onClick={logoutClick}>Logout</button>
       </div>
 
       <div>
@@ -57,7 +68,7 @@ const Home = () => {
 
       <div>
         <button 
-          onClick={() => navigate('/rules')}
+          onClick={() => navigate('/scuttlebutt/rules')}
           >
             How to Play
         </button>
@@ -66,7 +77,7 @@ const Home = () => {
       <div>
       {user &&
         <button
-        onClick={() => navigate('/profile')}
+        onClick={() => navigate('/scuttlebutt/profile')}
         >
           Profile
         </button>

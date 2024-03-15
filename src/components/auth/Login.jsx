@@ -26,7 +26,7 @@ const Login = ({ registerClick }) => {
         type: 'SET_USER',
         payload: res.data.user
       })
-      navigate('/profile')
+      navigate('/scuttlebutt/profile')
     })
     .catch(err => console.log(err))
   }
