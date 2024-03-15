@@ -32,7 +32,7 @@ const Login = ({ registerClick }) => {
   }
 
   return (
-    <div>
+    <div className="modal">
 
       <form onSubmit={handleLogin}>
         <h2>Login</h2>

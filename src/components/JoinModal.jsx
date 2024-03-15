@@ -34,7 +34,7 @@ const JoinModal = ({ game, toggleModal }) => {
     }
 
     return game.password ? (
-        <div className='joinModal'>
+        <div className='modal'>
             <section className='modalSection'>
                 <p>Enter Password</p>
                 <input type="text" placeholder='password' onChange={(e) => setPassword(e.target.value)}/>
@@ -46,10 +46,12 @@ const JoinModal = ({ game, toggleModal }) => {
 
     ) : (
 
-        <div className='joinModal'>
+        <div className='modal'>
+          <section className='modalSection'>
             <p>Are you sure you want to join {game.name}?</p>
             <button onClick={onSubmit}>Yes</button>
             <button onClick={toggleModal}>No</button>
+          </section>
         </div>
     )
 }

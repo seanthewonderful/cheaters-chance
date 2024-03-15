@@ -35,15 +35,7 @@ const HostModal = ({ isOpen, closeModal, user }) => {
   if (!isOpen) return null;
 
   return (
-    <div style={{ 
-      position: 'fixed', 
-      top: '50%', 
-      left: '50%', 
-      transform: 'translate(-50%, -50%)', 
-      backgroundColor: 'white', 
-      padding: '20px', 
-      zIndex: 1000 
-      }}>
+    <div className='modal'>
         <button onClick={closeModal}>Close</button>
         <h1>Create a new game</h1>
 

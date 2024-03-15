@@ -21,7 +21,7 @@ form {
   margin: 20px;
 }
 
-.joinModal {
+.modal {
   position: fixed;
   display: flex;
   align-items: center;

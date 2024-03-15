@@ -40,7 +40,7 @@ const Register = ({ loginClick }) => {
   }
 
   return (
-    <div>
+    <div className="modal">
 
       <form onSubmit={handleRegister}>
         <h3>Register an Account</h3>
