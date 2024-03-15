@@ -1,7 +1,7 @@
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 
-const Modal = ({ isOpen, onClose, register, loginClick, registerClick }) => {
+const AuthModal = ({ isOpen, onClose, register, loginClick, registerClick }) => {
 
   if (!isOpen) return null;
 
@@ -31,4 +31,4 @@ const Modal = ({ isOpen, onClose, register, loginClick, registerClick }) => {
   );
 };
 
-export default Modal;
+export default AuthModal;
