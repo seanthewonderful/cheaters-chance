@@ -43,3 +43,40 @@ form {
   align-items: center;
 }
 
+
+.hamburger-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  font-size: 20px;
+}
+
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  list-style: none;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  width: 200px;
+}
+
+.menu-item {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.menu-items:last-child {
+  border-bottom: none;
+}
+
+.menu-items a {
+  text-decoration: none;
+  color: #333;
+}
+
+.menu-items a:hover {
+  color: #007bff;
+}
