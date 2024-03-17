@@ -92,3 +92,15 @@ form {
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
+
+/* NotFound page */
+#not-found-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: fit-content;
+}
+#not-found-img {
+  max-width: 100%;
+}
