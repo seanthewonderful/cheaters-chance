@@ -3,7 +3,7 @@ import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } 
 import Home from './components/pages/Home.jsx'
 import Scuttlebutt from './components/pages/Scuttlebutt.jsx'
 import Profile from './components/pages/Profile.jsx'
-import Join from './components/pages/Join.jsx'
+import Join, { getJoinableGames } from './components/pages/Join.jsx'
 import Game from './components/pages/Game.jsx'
 import Rules from './components/pages/Rules.jsx'
 import Settings from './components/pages/Settings.jsx'
@@ -30,6 +30,7 @@ const router = createBrowserRouter(
         <Route 
           path="join" 
           element={<Join />} 
+          loader={getJoinableGames}
           errorElement={<NotFound />}
         />
         <Route 
