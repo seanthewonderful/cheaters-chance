@@ -43,7 +43,12 @@ form {
   align-items: center;
 }
 
-
+/* Hamburger menu */
+/* #nav-menu-div {
+  position: absolute;
+  top: 1%;
+  left: 50%;
+} */
 .hamburger-button {
   background: none;
   border: none;
@@ -60,23 +65,30 @@ form {
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   width: 200px;
+  transition: max-height 0.3s ease-in-out;
+  overflow: hidden;
+}
+.closed {
+  max-height: 0;
+  border: none;
+}
+.open {
+  min-height: fit-content;
+  max-height: 50vh;
+}
+.menu-items:last-child {
+  border-bottom: none;
+}
+.menu-items a {
+  text-decoration: none;
+  color: #333;
+}
+.menu-items a:hover {
+  color: #007bff;
 }
 
 .menu-item {
   padding: 10px;
   text-align: left;
   border-bottom: 1px solid #ddd;
-}
-
-.menu-items:last-child {
-  border-bottom: none;
-}
-
-.menu-items a {
-  text-decoration: none;
-  color: #333;
-}
-
-.menu-items a:hover {
-  color: #007bff;
 }
