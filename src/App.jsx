@@ -6,6 +6,7 @@ import Profile from './components/pages/Profile.jsx'
 import Join from './components/pages/Join.jsx'
 import Game from './components/pages/Game.jsx'
 import Rules from './components/pages/Rules.jsx'
+import Settings from './components/pages/Settings.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -16,6 +17,7 @@ const router = createBrowserRouter(
         <Route path="join" element={<Join />} />
         <Route path="game" element={<Game />} />
         <Route path="rules" element={<Rules />} />
+        <Route path="settings" element={<Settings />} />
       </Route>
     </>
   )
