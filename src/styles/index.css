@@ -55,6 +55,20 @@ form {
   cursor: pointer;
   padding: 10px;
   font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.menu-icon {
+  transition: opacity 0.5s ease-out;
+  opacity: 0;
+  position: absolute;
+}
+.visible {
+  opacity: 1;
+}
+.hidden {
+  opacity: 0;
 }
 
 .menu-items {
@@ -86,11 +100,13 @@ form {
 .menu-items a:hover {
   color: #007bff;
 }
-
 .menu-item {
   padding: 10px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+  /* transition: opacity 0.5s, visibility 0s 0.5s; 
+  opacity: 0;
+  visibility: hidden; */
 }
 
 /* NotFound page */
@@ -103,4 +119,7 @@ form {
 }
 #not-found-img {
   max-width: 100%;
+}
+#menu-icon {
+  transition: 0.3s ease-in-out;
 }

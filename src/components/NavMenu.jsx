@@ -16,21 +16,64 @@ const NavMenu = () => {
         className='hamburger-button' 
         onClick={toggleMenu}
         >
-          {!isOpen && <img src={hamburgerMenu} alt="" />}
-          {isOpen && <img src={xLg} alt="" />}
+          {/* {!isOpen &&  */}
+          <img 
+            id="menu-icon" 
+            className={`menu-icon ${!isOpen ? 'visible' : 'hidden'}`}
+            src={hamburgerMenu} 
+            alt="" 
+            />
+          {/* }
+          {isOpen &&  */}
+          <img 
+            id="menu-icon" 
+            className={`menu-icon ${isOpen ? 'visible' : 'hidden'}`}
+            src={xLg} 
+            alt="" 
+            />
+          {/* } */}
       </button>
       
         <div className={`menu-items ${isOpen? 'open' : 'closed'}`}>
           {/* Menu Items */}
-            <NavLink className="menu-item" to="/scuttlebutt/profile">Profile</NavLink>
+            <NavLink 
+              to="/scuttlebutt/profile"
+              className="menu-item" 
+              onClick={() => setIsOpen(false)}
+              >
+                Profile
+              </NavLink>
           
-            <NavLink className="menu-item" to="/scuttlebutt/join">Join Game</NavLink>
+            <NavLink 
+              className="menu-item" 
+              to="/scuttlebutt/join"
+              >
+                Join Game
+              </NavLink>
          
-            <NavLink className="menu-item" to="/scuttlebutt/host">Host Game</NavLink>
+            <NavLink 
+              className="menu-item" 
+              to="/scuttlebutt/host"
+              >
+                Host Game
+              </NavLink>
       
-            <NavLink className="menu-item" to="/scuttlebutt/rules">Rules</NavLink>   
+            <NavLink 
+              className="menu-item" 
+              to="/scuttlebutt/rules
+              "
+              >
+                Rules
+              </NavLink>   
 
-            <NavLink className="menu-item" to="/scuttlebutt/settings">Settings</NavLink>     
+            <NavLink 
+              className="menu-item" 
+              to="/scuttlebutt/setti
+              n
+              gs"
+              >
+                Settings
+              </NavLink>     
         </div>
       
     </div>
