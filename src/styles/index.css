@@ -33,7 +33,6 @@ form {
   height: 100vh;
   z-Index: 1000
 }
-
 .modalSection {
   width: 30vw;
   height:40vh;
@@ -88,7 +87,7 @@ form {
 }
 .open {
   min-height: fit-content;
-  max-height: 50vh;
+  max-height: 100vh;
 }
 .menu-items:last-child {
   border-bottom: none;

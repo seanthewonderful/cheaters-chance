@@ -16,22 +16,18 @@ const NavMenu = () => {
         className='hamburger-button' 
         onClick={toggleMenu}
         >
-          {/* {!isOpen &&  */}
           <img 
             id="menu-icon" 
             className={`menu-icon ${!isOpen ? 'visible' : 'hidden'}`}
             src={hamburgerMenu} 
             alt="" 
             />
-          {/* }
-          {isOpen &&  */}
           <img 
             id="menu-icon" 
             className={`menu-icon ${isOpen ? 'visible' : 'hidden'}`}
             src={xLg} 
             alt="" 
             />
-          {/* } */}
       </button>
       
         <div className={`menu-items ${isOpen? 'open' : 'closed'}`}>
