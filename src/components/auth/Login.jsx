@@ -32,27 +32,27 @@ const Login = ({ registerClick }) => {
   }
 
   return (
-    <div className="modal">
+    <div className="login-modal">
 
       <form onSubmit={handleLogin}>
         <h2>Login</h2>
         <label>Username: </label>
-        <input 
-          type="text" 
-          name="username" 
+        <input
+          type="text"
+          name="username"
           onChange={e => setUsername(e.target.value)}
         />
         <label>Password: </label>
-        <input 
-          type="password" 
-          name="password" 
+        <input
+          type="password"
+          name="password"
           onChange={e => setPassword(e.target.value)}
         />
         <input type='submit' value='Login' />
       </form>
 
       <p>Need to create a new account?</p>
-      <button 
+      <button
         onClick={registerClick}
         >Register
       </button>

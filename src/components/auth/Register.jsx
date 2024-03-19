@@ -40,39 +40,39 @@ const Register = ({ loginClick }) => {
   }
 
   return (
-    <div className="modal">
+    <div className="register-modal">
 
       <form onSubmit={handleRegister}>
         <h3>Register an Account</h3>
         <label>Username: </label>
-        <input 
-          type="text" 
-          name="username" 
+        <input
+          type="text"
+          name="username"
           onChange={e => setUsername(e.target.value)}
         />
         <label>Password: </label>
-        <input 
-          type="password" 
-          name="password" 
+        <input
+          type="password"
+          name="password"
           onChange={e => setPassword(e.target.value)}
         />
         <label>Confirm Password: </label>
-        <input 
-          type="password" 
-          name="confirmPassword" 
+        <input
+          type="password"
+          name="confirmPassword"
           onChange={e => setConfirmPassword(e.target.value)}
         />
         <label>Image URL: </label>
-        <input 
-          type="text" 
-          name="imageURL" 
+        <input
+          type="text"
+          name="imageURL"
           onChange={e => setImgUrl(e.target.value)}
         />
         <input type='submit' value='Register' />
       </form>
 
       <p>Already have an account?</p>
-      <button 
+      <button
         onClick={loginClick}
         >Login
       </button>

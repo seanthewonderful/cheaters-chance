@@ -5,7 +5,28 @@ import AuthModal from '../AuthModal.jsx'
 import sessionCheck from '../../functions/sessionCheck.js'
 import axios from 'axios'
 
+import io from 'socket.io-client'
+
+const URL = 'http://localhost:2319'
+const socket = io.connect(URL)
+
 const Home = () => {
+
+  const checkSocket = () => {
+    console.log('hit')
+    socket.emit('greet', (res) => {
+      console.log('response', res)
+    })
+  }
+
+  useEffect(() => {
+
+    socket.on('goodbye', (res) => {
+      console.log('goodbye hit')
+      console.log('res', res.data)
+    })
+
+  }, [socket])
 
   const user = useSelector(state => state.user)
   const [modalOpen, setModalOpen] = useState(false)
@@ -44,14 +65,16 @@ const Home = () => {
     sessionCheck(dispatch)
   }, [])
 
+
+
   return (
     <div id='home-div'>
       <h1>Cheater's Chance</h1>
 
-      <AuthModal 
-        isOpen={modalOpen} 
-        onClose={closeModal} 
-        register={register} 
+      <AuthModal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        register={register}
         loginClick={loginClick}
         registerClick={registerClick}
       />
@@ -67,7 +90,7 @@ const Home = () => {
       </div>
 
       <div>
-        <button 
+        <button
           onClick={() => navigate('/scuttlebutt/rules')}
           >
             How to Play
@@ -83,6 +106,8 @@ const Home = () => {
         </button>
       }
       </div>
+
+      <button onClick={checkSocket}>Click me</button>
 
     </div>
   )

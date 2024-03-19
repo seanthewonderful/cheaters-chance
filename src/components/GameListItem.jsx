@@ -18,7 +18,7 @@ const GameListItem = ({game}) => {
 
   return (
     <>
-      <div className='gameListItem' key={game.gameId} onClick={handleClick}>
+      <div className='game-list-item' key={game.gameId} onClick={handleClick}>
         <p>Name: {game.name}</p>
         <p>Players: {game.players.length}/{game.playerLimit}</p>
         <p>Starting Dice: {game.startingDice}</p>
