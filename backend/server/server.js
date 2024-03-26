@@ -6,6 +6,7 @@ import gameFunctions from './controllers/gameController.js'
 import http from 'http'
 import { Server } from 'socket.io'
 import cors from 'cors'
+import axios from 'axios'
 
 const app = express()
 
@@ -43,13 +44,27 @@ io.engine.use(sessionMiddleware)
 ViteExpress.config({ printViteDevServerHost: true })
 
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
     console.log('socket connected')
 
     socket.on('greet', () => {
         console.log('greet hit')
 
         socket.broadcast.emit('goodbye', {data: 'sup boiiii'})
+    })
+
+    socket.on('joinGame', async (obj) => {
+        console.log('join game hit')
+        console.log(obj)
+
+        let asdf = await joinGame(obj)
+        console.log(asdf)
+
+        // myFunc(asdf)
+        socket.emit('jg hit', {data: asdf})
+
+        // io.emit()
+
     })
 
 

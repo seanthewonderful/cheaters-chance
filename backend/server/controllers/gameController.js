@@ -1,6 +1,7 @@
 import { User, Game, Player } from '../../database/model.js'
 import { Op } from 'sequelize'
 
+
 const gameFunctions = {
     newGame: async (req, res) => {
         let { name, locked, password, playerLimit, startingDice } = req.body
@@ -18,7 +19,7 @@ const gameFunctions = {
             return
         }
 
-        name = name.replace("'","''")
+        name = name.replace("'", "''")
 
         // Creates new game
         const game = await Game.create({
@@ -63,16 +64,16 @@ const gameFunctions = {
         res.status(400).send({ message: "There are no open games" })
     },
 
-    joinGame: async (req, res) => {
-        const { name, password } = req.body
-        console.log(req.body)
+    joinGame: async (obj) => {
 
         // Finds game with matching name
+        console.log('game name', obj.name)
+
         const foundGame = await Game.findOne(
             {
                 where: {
-                    name: name,
-                    password: password
+                    name: obj.name,
+                    // password: password
                 },
                 include: {
                     model: Player
@@ -80,21 +81,29 @@ const gameFunctions = {
             }
         )
 
+        console.log('found Game', foundGame)
+
+
         // Checks if the passwords match
         if (foundGame) {
-            if (foundGame.password === password) {
+            console.log('game found!')
+            console.log(foundGame.password)
+            console.log(obj.password)
+
+
+            if (foundGame.password === obj.password && obj.password !== 'guest') {
+                console.log('password hit')
 
                 // If user is logged in, create player and assign to game
-                if (req.session.userId) {
+                if (obj.userId) {
                     const player = await foundGame.createPlayer({
                         host: false,
-                        userId: req.session.userId
+                        userId: obj.userId
                     })
 
-                    res.send({ message: 'Game joined', player })
-                    return
+                    return { message: 'Game joined', player }
                 } else {
-
+                    console.log('no userId hit')
                     // Create temp user with unique username tied to game
                     const tempUser = await User.create({
                         username: `${foundGame.name} G${foundGame.players.length + 1}`,
@@ -107,13 +116,26 @@ const gameFunctions = {
                         userId: tempUser.userId,
                     })
 
-                    res.status(200).send({ message: 'Game joined as guest', player })
-                    return
+                    return { message: 'Game joined as guest', player }
                 }
+            } else {
+                console.log('no userId no password hit')
+                // Create temp user with unique username tied to game
+                const tempUser = await User.create({
+                    username: `${foundGame.name} G${foundGame.players.length + 1}`,
+                    password: 'guest',
+                    imgUrl: 'guest.jpg'
+                })
+
+                const player = await foundGame.createPlayer({
+                    host: false,
+                    userId: tempUser.userId,
+                })
+
+                return { message: 'Game joined as guest', player }
             }
         }
-
-        res.status(400).send({ message: 'Game not found' })
+        return { message: 'game not found' }
     },
 
     startGame: async (req, res) => {

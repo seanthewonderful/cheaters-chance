@@ -46,7 +46,7 @@ for (let i = 0; i < fellowship.length; i++) {
     userAccounts.push(newUser)
 
     // dynamically setup game params based on userId
-    let password = newUser.userId % 2 === 0 ? null : 'speakFriendAndEnter'
+    let password = newUser.userId % 2 === 0 ? 'guest' : 'speakFriendAndEnter'
     let locked = newUser.userId % 2 === 0 ? false : true
     let limit = newUser.userId % 2 === 0 ? 4 : 6
     let dice = newUser.userId % 2 === 0 ? 4 : 6
