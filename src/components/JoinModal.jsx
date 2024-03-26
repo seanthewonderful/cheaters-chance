@@ -1,59 +1,65 @@
-import { useState } from 'react'
-import {useNavigate} from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import axios from 'axios'
+
+import socket from '../functions/socket.js'
+
 
 const JoinModal = ({ game, toggleModal }) => {
 
-    const navigate = useNavigate()
+  const navigate = useNavigate()
 
-    const [password, setPassword] = useState('')
+  const [password, setPassword] = useState('')
 
-    const onSubmit = () => {
-        if(game.password){
-            axios.post('/api/joinGame', {name: game.name, password: password})
-                .then(res => {
-                    console.log(res.data)
-                    navigate('/scuttlebutt/game')
-                })
-                .catch(err => {
-                    console.log(err)
-                    alert('Password Incorrect')
-                })
-        } else {
-            axios.post('/api/joinGame', {name: game.name, password: null})
-            .then(res => {
-                console.log(res.data)
-                navigate('/scuttlebutt/game')
-            })
-            .catch(err => {
-                console.log(err)
-                alert("I honestly don't know how you fucked this up")
-            })
-        }
+  const userId = useSelector(state => state.userId)
 
+  const myFunc = (data) => { console.log(data) }
+
+  useEffect(() => {
+
+    socket.on('goodbye', (res) => {
+      console.log('goodbye hit')
+      console.log('res', res.data)
+    })
+
+    socket.on('jg hit', myFunc, (res) => {
+      console.log('fe jg hit', res)
+    })
+
+  }, [socket])
+
+
+  const onSubmit = () => {
+    if (game.password !== 'guest') {
+      socket.emit('joinGame', { name: game.name, password: password, userId })
+    } else {
+      socket.emit('joinGame', { name: game.name, password: 'guest', userId })
     }
 
-    return game.password ? (
-        <div className='modal'>
-            <section className='modal-section'>
-                <p>Enter Password</p>
-                <input type="text" placeholder='password' onChange={(e) => setPassword(e.target.value)}/>
-                <button onClick={onSubmit}>Submit</button>
-                <button onClick={toggleModal}>Cancel</button>
-            </section>
+  }
 
-        </div>
+  return game.password !== 'guest' ? (
+    <div className='modal'>
+      <section className='modal-section'>
+        <p>Enter Password</p>
+        <input type="text" placeholder='password' onChange={(e) => setPassword(e.target.value)} />
+        <button onClick={onSubmit}>Submit</button>
+        <button onClick={toggleModal}>Cancel</button>
+      </section>
 
-    ) : (
+    </div>
 
-        <div className='modal'>
-          <section className='modal-section'>
-            <p>Are you sure you want to join {game.name}?</p>
-            <button onClick={onSubmit}>Yes</button>
-            <button onClick={toggleModal}>No</button>
-          </section>
-        </div>
-    )
+  ) : (
+
+    <div className='modal'>
+      <section className='modal-section'>
+        <p>Are you sure you want to join {game.name}?</p>
+        <button onClick={onSubmit}>Yes</button>
+        <button onClick={toggleModal}>No</button>
+      </section>
+    </div>
+  )
 }
 
 export default JoinModal

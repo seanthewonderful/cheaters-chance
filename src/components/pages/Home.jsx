@@ -5,10 +5,12 @@ import AuthModal from '../AuthModal.jsx'
 import sessionCheck from '../../functions/sessionCheck.js'
 import axios from 'axios'
 
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 
-const URL = 'http://localhost:2319'
-const socket = io.connect(URL)
+// const URL = 'http://localhost:2319'
+// const socket = io.connect(URL)
+
+import socket from '../../functions/socket.js'
 
 const Home = () => {
 
@@ -24,6 +26,10 @@ const Home = () => {
     socket.on('goodbye', (res) => {
       console.log('goodbye hit')
       console.log('res', res.data)
+    })
+
+    socket.on('jg hit', (res) => {
+      console.log('fe jg hit', res.data)
     })
 
   }, [socket])

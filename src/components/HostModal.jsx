@@ -1,37 +1,51 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios';
 import toTitleCase from '../functions/toTitleCase.js'
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+import socket from '../functions/socket.js'
 
 const HostModal = ({ isOpen, closeModal, user }) => {
-  
+
   const [gameName, setGameName] = useState(`${toTitleCase(user.username)}s Game`)
   const [playerLimit, setPlayerLimit] = useState(6)
   const [startingDice, setStartingDice] = useState(5)
   const [gamePassword, setGamePassword] = useState({ required: false, password: '' })
-  
+  const userId = useSelector(state => state.userId)
+
+  useEffect(() => {
+    socket.on('host game data', (data) => {
+      console.log('hot game data full', data)
+      navigate('/scuttlebutt/profile')
+    })
+  }, [])
+
   const navigate = useNavigate()
-  
+
   const createGame = (e) => {
     e.preventDefault()
-    
+
     const body = {
       name: gameName,
       playerLimit: playerLimit,
       startingDice: startingDice,
       locked: gamePassword.required,
-      password: gamePassword.password
+      password: gamePassword.required === false ? 'guest' : guest.password.password,
+      userId: userId
     }
-    
-    axios.post(`/api/newGame`, body)
-    .then(res => {
-      console.log(res.data.message)
-      closeModal()
-      navigate('/scuttlebutt/profile')
-    })
-    .catch(err => console.log(err))
+
+    socket.emit('hostGame', body)
+
+    // axios.post(`/api/newGame`, body)
+    // .then(res => {
+    //   console.log(res.data.message)
+    //   closeModal()
+    //   navigate('/scuttlebutt/profile')
+    // })
+    // .catch(err => console.log(err))
   }
-  
+
   if (!isOpen) return null;
 
   return (
@@ -42,21 +56,21 @@ const HostModal = ({ isOpen, closeModal, user }) => {
         <form onSubmit={createGame}>
 
         <label htmlFor="gameNameInput">Game Name:</label>
-        <input 
-          type="text" 
-          name="gameName" 
-          id="gameNameInput" 
+        <input
+          type="text"
+          name="gameName"
+          id="gameNameInput"
           placeholder='Name your game'
           value={gameName}
           onChange={e => setGameName(e.target.value)}
         />
-        
+
         <span>
         <label htmlFor="gamePassword">Require password to join game?</label>
-        <input 
-          type='checkbox' 
-          name='gamePassword' 
-          id='gamePassword' 
+        <input
+          type='checkbox'
+          name='gamePassword'
+          id='gamePassword'
           onChange={() => setGamePassword({ ...gamePassword, required: !gamePassword.required })}
           />
         </span>
@@ -64,11 +78,11 @@ const HostModal = ({ isOpen, closeModal, user }) => {
         {gamePassword.required && (
           <>
           <label htmlFor="gamePasswordInput">Game Password:</label>
-          <input 
-            type="text" 
-            name="gamePasswordInput" 
-            id="gamePasswordInput" 
-            placeholder='Game password' 
+          <input
+            type="text"
+            name="gamePasswordInput"
+            id="gamePasswordInput"
+            placeholder='Game password'
             value={gamePassword.password}
             onChange={e => setGamePassword({...gamePassword, password: e.target.value })}
           />
@@ -76,7 +90,7 @@ const HostModal = ({ isOpen, closeModal, user }) => {
         )}
 
         <label htmlFor="playerLimitInput">Player Limit:</label>
-        <select 
+        <select
           name="playerLimit"
           id="playerLimit"
           value={playerLimit}
