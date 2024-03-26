@@ -3,8 +3,8 @@ import { Op } from 'sequelize'
 
 
 const gameFunctions = {
-    newGame: async (req, res) => {
-        let { name, locked, password, playerLimit, startingDice } = req.body
+    newGame: async (body) => {
+        let { name, locked, password, playerLimit, startingDice, userId } = body
 
         // Checks to see if game name already exists
         const gameCheck = await Game.findOne({
@@ -15,8 +15,8 @@ const gameFunctions = {
         })
 
         if (gameCheck) {
-            res.status(400).send({ message: 'Name already in use' })
-            return
+            // res.status(400).send({ message: 'Name already in use' })
+            return{ message: 'Name already in use' }
         }
 
         name = name.replace("'", "''")
@@ -30,14 +30,15 @@ const gameFunctions = {
         if (game) {
             await game.createPlayer({
                 host: true,
-                userId: req.session.userId
+                userId: userId
             })
 
-            res.status(201).send({ message: 'Game created', game })
-            return
+            // res.status(201).send({ message: 'Game created', game })
+            return { message: 'Game created', game }
         }
 
-        res.status(400).send({ message: 'Game creation failed' })
+        return { message: 'Game creation failed' }
+        // res.status(400).send({ message: 'Game creation failed' })
     },
 
     allGames: async (req, res) => {

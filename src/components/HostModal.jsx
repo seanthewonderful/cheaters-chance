@@ -1,7 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios';
 import toTitleCase from '../functions/toTitleCase.js'
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+import socket from '../functions/socket.js'
 
 const HostModal = ({ isOpen, closeModal, user }) => {
 
@@ -9,6 +12,14 @@ const HostModal = ({ isOpen, closeModal, user }) => {
   const [playerLimit, setPlayerLimit] = useState(6)
   const [startingDice, setStartingDice] = useState(5)
   const [gamePassword, setGamePassword] = useState({ required: false, password: '' })
+  const userId = useSelector(state => state.userId)
+
+  useEffect(() => {
+    socket.on('host game data', (data) => {
+      console.log('hot game data full', data)
+      navigate('/scuttlebutt/profile')
+    })
+  }, [])
 
   const navigate = useNavigate()
 
@@ -20,16 +31,19 @@ const HostModal = ({ isOpen, closeModal, user }) => {
       playerLimit: playerLimit,
       startingDice: startingDice,
       locked: gamePassword.required,
-      password: gamePassword.required === false ? 'guest' : guest.password.password
+      password: gamePassword.required === false ? 'guest' : guest.password.password,
+      userId: userId
     }
 
-    axios.post(`/api/newGame`, body)
-    .then(res => {
-      console.log(res.data.message)
-      closeModal()
-      navigate('/scuttlebutt/profile')
-    })
-    .catch(err => console.log(err))
+    socket.emit('hostGame', body)
+
+    // axios.post(`/api/newGame`, body)
+    // .then(res => {
+    //   console.log(res.data.message)
+    //   closeModal()
+    //   navigate('/scuttlebutt/profile')
+    // })
+    // .catch(err => console.log(err))
   }
 
   if (!isOpen) return null;

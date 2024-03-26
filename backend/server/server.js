@@ -60,11 +60,15 @@ io.on('connection', async (socket) => {
         let asdf = await joinGame(obj)
         console.log(asdf)
 
-        // myFunc(asdf)
         socket.emit('jg hit', {data: asdf})
+    })
 
-        // io.emit()
+    socket.on('hostGame', async (body) => {
+        console.log('host game hit')
 
+        let hostGameData = await newGame(body)
+
+        socket.emit('host game data', hostGameData)
     })
 
 
