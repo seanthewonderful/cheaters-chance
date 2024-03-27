@@ -14,7 +14,7 @@ const JoinModal = ({ game, toggleModal }) => {
 
   const userId = useSelector(state => state.userId)
 
-  const myFunc = (data) => { console.log(data) }
+  console.log('host modal', socket)
 
   useEffect(() => {
 
@@ -23,8 +23,10 @@ const JoinModal = ({ game, toggleModal }) => {
       console.log('res', res.data)
     })
 
-    socket.on('jg hit', myFunc, (res) => {
-      console.log('fe jg hit', res)
+    socket.on('join game hit', (res) => {
+      console.log('front end join game hit', res)
+
+      navigate(`/scuttlebutt/lobby/${res.data.foundGame.gameId}`)
     })
 
   }, [socket])

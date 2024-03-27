@@ -44,6 +44,8 @@ io.engine.use(sessionMiddleware)
 ViteExpress.config({ printViteDevServerHost: true })
 
 
+const rooms = {}
+
 io.on('connection', async (socket) => {
     console.log('socket connected')
 
@@ -53,22 +55,45 @@ io.on('connection', async (socket) => {
         socket.broadcast.emit('goodbye', {data: 'sup boiiii'})
     })
 
-    socket.on('joinGame', async (obj) => {
+    socket.on('joinGame', async (body) => {
         console.log('join game hit')
-        console.log(obj)
+        console.log(body)
 
-        let asdf = await joinGame(obj)
-        console.log(asdf)
+        let joinedData = await joinGame(body)
+        console.log(joinedData)
 
-        socket.emit('jg hit', {data: asdf})
+        socket.join(joinedData.name)
+
+        socket.emit('join game hit', {data: joinedData})
+
+        io.to(joinedData.foundGame.name).emit('new player', {data: joinedData, message: 'new player joined'})
     })
 
     socket.on('hostGame', async (body) => {
         console.log('host game hit')
 
+        if(rooms[body.name]){
+            console.log('room exists')
+        }
         let hostGameData = await newGame(body)
 
-        socket.emit('host game data', hostGameData)
+        console.log('host game data', hostGameData)
+
+        if(hostGameData.game){
+            rooms[hostGameData.game.name] = hostGameData.game.password
+
+            socket.join(hostGameData.name)
+
+            socket.emit('host game data', hostGameData)
+        } else {
+            socket.emit('gameFailure', {message: hostGameData.message})
+        }
+    })
+
+    socket.on('get room', async (body) => {
+        const foundGame = await findGame(body)
+
+        socket.emit('room data', {data: foundGame})
     })
 
 
@@ -87,7 +112,7 @@ app.get('/api/sessionCheck', sessionCheck)
 
 
 // GAME ENDPOINTS
-const { newGame, allGames, joinGame, startGame } = gameFunctions
+const { newGame, allGames, joinGame, startGame, findGame } = gameFunctions
 app.post('/api/newGame', newGame)
 app.get('/api/allGames', allGames)
 app.post('/api/joinGame', joinGame)

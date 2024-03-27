@@ -102,7 +102,7 @@ const gameFunctions = {
                         userId: obj.userId
                     })
 
-                    return { message: 'Game joined', player }
+                    return { message: 'Game joined', player, foundGame }
                 } else {
                     console.log('no userId hit')
                     // Create temp user with unique username tied to game
@@ -117,7 +117,7 @@ const gameFunctions = {
                         userId: tempUser.userId,
                     })
 
-                    return { message: 'Game joined as guest', player }
+                    return { message: 'Game joined as guest', player, foundGame }
                 }
             } else {
                 console.log('no userId no password hit')
@@ -133,7 +133,7 @@ const gameFunctions = {
                     userId: tempUser.userId,
                 })
 
-                return { message: 'Game joined as guest', player }
+                return { message: 'Game joined as guest', player, foundGame }
             }
         }
         return { message: 'game not found' }
@@ -142,6 +142,20 @@ const gameFunctions = {
     startGame: async (req, res) => {
         res.status(200).send({ message: 'Game started' })
     },
+
+    findGame: async (body) => {
+
+        const game = await Game.findOne({
+            where: {
+                gameId: body.gameId
+            },
+            include: {
+                model: Player
+            }
+        })
+
+        return game
+    }
 }
 
 export default gameFunctions
