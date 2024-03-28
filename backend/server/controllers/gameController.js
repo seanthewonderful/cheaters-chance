@@ -4,6 +4,7 @@ import { Op } from 'sequelize'
 
 const gameFunctions = {
     newGame: async (body) => {
+        console.log('new game body', body)
         let { name, locked, password, playerLimit, startingDice, userId } = body
 
         // Checks to see if game name already exists
@@ -16,7 +17,7 @@ const gameFunctions = {
 
         if (gameCheck) {
             // res.status(400).send({ message: 'Name already in use' })
-            return{ message: 'Name already in use' }
+            return { message: 'Name already in use' }
         }
 
         name = name.replace("'", "''")
@@ -26,6 +27,8 @@ const gameFunctions = {
             name, password, locked, playerLimit, startingDice
         })
 
+
+
         // Creates player and assigns game creater as host
         if (game) {
             await game.createPlayer({
@@ -33,9 +36,25 @@ const gameFunctions = {
                 userId: userId
             })
 
+            let foundGame = await Game.findOne(
+                {
+                    where: {
+                        name: game.name,
+                        // password: password
+                    },
+                    include: {
+                        model: Player,
+                        include: {
+                            model: User
+                        }
+                    }
+                }
+            )
             // res.status(201).send({ message: 'Game created', game })
-            return { message: 'Game created', game }
+            return { message: 'Game created', game: foundGame }
         }
+
+
 
         return { message: 'Game creation failed' }
         // res.status(400).send({ message: 'Game creation failed' })
@@ -109,7 +128,10 @@ const gameFunctions = {
                                 // password: password
                             },
                             include: {
-                                model: Player
+                                model: Player,
+                                include: {
+                                    model: User
+                                }
                             }
                         }
                     )
@@ -136,7 +158,10 @@ const gameFunctions = {
                                 // password: password
                             },
                             include: {
-                                model: Player
+                                model: Player,
+                                include: {
+                                    model: User
+                                }
                             }
                         }
                     )
@@ -164,7 +189,10 @@ const gameFunctions = {
                             // password: password
                         },
                         include: {
-                            model: Player
+                            model: Player,
+                            include: {
+                                model: User
+                            }
                         }
                     }
                 )
@@ -186,7 +214,10 @@ const gameFunctions = {
                 gameId: body.gameId
             },
             include: {
-                model: Player
+                model: Player,
+                include: {
+                    model: User
+                }
             }
         })
 

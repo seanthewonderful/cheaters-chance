@@ -19,12 +19,12 @@ const Lobby = () => {
         socket.emit('get room', {gameId})
 
         socket.on('room data', (res) => {
-            console.log('lobby room data',res.data)
+            // console.log('lobby room data',res.data)
             setGameData(res.data)
           })
 
           socket.on('new player', (res) => {
-            console.log('new player joined', res.message, res.data)
+            console.log('new player joined', res.message, res.data.players)
             console.log('GAME DATA', gameData)
             console.log('RESPONSE GAME DATA', res.data.foundGame)
             setGameData(res.data.foundGame)
@@ -34,7 +34,14 @@ const Lobby = () => {
 
     console.log(gameData.players)
 
-    const allPlayers = gameData.players ? gameData.players.map((el) => <p>Player Id: {el.playerId}</p>) : []
+    const allPlayers = gameData.players ? gameData.players.map((el, i) => {
+    return <section key={i}>
+      <p>Player Id: {el.playerId}</p>
+      <p>Player Name: {el.user.username}</p>
+    </section>
+  })
+      :
+  []
 
   return (
     <div>Lobby
