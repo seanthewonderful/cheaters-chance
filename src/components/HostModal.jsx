@@ -16,7 +16,7 @@ const HostModal = ({ isOpen, closeModal, user }) => {
 
   useEffect(() => {
     socket.on('host game data', (data) => {
-      console.log('hot game data full', data)
+      console.log('host game data full', data)
       navigate(`/scuttlebutt/lobby/${data.game.gameId}`)
     })
   }, [])

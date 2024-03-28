@@ -56,13 +56,13 @@ io.on('connection', async (socket) => {
     })
 
     socket.on('joinGame', async (body) => {
-        console.log('join game hit')
-        console.log(body)
+        // console.log('join game hit')
+        // console.log(body)
 
         let joinedData = await joinGame(body)
         console.log(joinedData)
 
-        socket.join(joinedData.name)
+        await socket.join(joinedData.foundGame.name)
 
         socket.emit('join game hit', {data: joinedData})
 
@@ -82,7 +82,7 @@ io.on('connection', async (socket) => {
         if(hostGameData.game){
             rooms[hostGameData.game.name] = hostGameData.game.password
 
-            socket.join(hostGameData.name)
+            socket.join(hostGameData.game.name)
 
             socket.emit('host game data', hostGameData)
         } else {

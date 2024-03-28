@@ -70,7 +70,7 @@ const gameFunctions = {
         // Finds game with matching name
         console.log('game name', obj.name)
 
-        const foundGame = await Game.findOne(
+        let foundGame = await Game.findOne(
             {
                 where: {
                     name: obj.name,
@@ -102,6 +102,18 @@ const gameFunctions = {
                         userId: obj.userId
                     })
 
+                    foundGame = await Game.findOne(
+                        {
+                            where: {
+                                name: obj.name,
+                                // password: password
+                            },
+                            include: {
+                                model: Player
+                            }
+                        }
+                    )
+
                     return { message: 'Game joined', player, foundGame }
                 } else {
                     console.log('no userId hit')
@@ -116,6 +128,18 @@ const gameFunctions = {
                         host: false,
                         userId: tempUser.userId,
                     })
+
+                    foundGame = await Game.findOne(
+                        {
+                            where: {
+                                name: obj.name,
+                                // password: password
+                            },
+                            include: {
+                                model: Player
+                            }
+                        }
+                    )
 
                     return { message: 'Game joined as guest', player, foundGame }
                 }
@@ -132,6 +156,18 @@ const gameFunctions = {
                     host: false,
                     userId: tempUser.userId,
                 })
+
+                foundGame = await Game.findOne(
+                    {
+                        where: {
+                            name: obj.name,
+                            // password: password
+                        },
+                        include: {
+                            model: Player
+                        }
+                    }
+                )
 
                 return { message: 'Game joined as guest', player, foundGame }
             }
