@@ -90,6 +90,12 @@ io.on('connection', async (socket) => {
         }
     })
 
+    socket.on('start game', async (body) => {
+      console.log('start game hit')
+      console.log(body)
+      io.to(body.name).emit('game initialize', body)
+    })
+
     socket.on('get room', async (body) => {
         const foundGame = await findGame(body)
 
