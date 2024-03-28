@@ -6,7 +6,6 @@ import gameFunctions from './controllers/gameController.js'
 import http from 'http'
 import { Server } from 'socket.io'
 import cors from 'cors'
-import axios from 'axios'
 
 const app = express()
 
@@ -56,13 +55,13 @@ io.on('connection', async (socket) => {
     })
 
     socket.on('joinGame', async (body) => {
-        // console.log('join game hit')
-        // console.log(body)
+        console.log('join game hit')
+        console.log(body)
 
         let joinedData = await joinGame(body)
         console.log(joinedData)
 
-        await socket.join(joinedData.foundGame.name)
+        socket.join(joinedData.foundGame.name)
 
         socket.emit('join game hit', {data: joinedData})
 
@@ -93,7 +92,7 @@ io.on('connection', async (socket) => {
     socket.on('start game', async (body) => {
       console.log('start game hit')
       console.log(body)
-      io.to(body.name).emit('game initialize', body)
+      io.to(body.name).emit('game initialized', body)
     })
 
     socket.on('get room', async (body) => {

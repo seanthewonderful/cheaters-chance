@@ -12,7 +12,7 @@ const JoinModal = ({ game, toggleModal }) => {
 
   const [password, setPassword] = useState('')
 
-  const userId = useSelector(state => state.userId)
+  const userId = useSelector(state => state.user.userId)
 
   useEffect(() => {
 
@@ -22,23 +22,20 @@ const JoinModal = ({ game, toggleModal }) => {
     })
 
     socket.on('join game hit', (res) => {
-
       navigate(`/scuttlebutt/lobby/${res.data.foundGame.gameId}`)
     })
 
   }, [socket])
 
-
   const onSubmit = () => {
-    if (game.password !== 'guest') {
+    if (game.password !== 'default') {
       socket.emit('joinGame', { name: game.name, password: password, userId })
     } else {
-      socket.emit('joinGame', { name: game.name, password: 'guest', userId })
+      socket.emit('joinGame', { name: game.name, password: 'default', userId })
     }
-
   }
 
-  return game.password !== 'guest' ? (
+  return game.password !== 'default' ? (
     <div className='modal'>
       <section className='modal-section'>
         <p>Enter Password</p>

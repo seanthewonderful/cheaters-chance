@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Player from '../Player'
 import Opponent from '../Opponent'
 import Dice from '../Dice'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import socket from '../../functions/socket.js'
 import { useSelector } from 'react-redux'
@@ -15,15 +15,14 @@ const Lobby = () => {
   const user = useSelector(state => state.user)
   const { gameId } = useParams()
 
+  const navigate = useNavigate()
+
   // figure out if user is host by matching host.userId to user.userId
   const figureIfHost = () => {
     if (user) {
-      const host = gameData.players ? gameData.players.filter(player => player.host)[0] : null
-      if (host) {
-        if (user.userId === host.userId) {
-          setAmHost(true)
-          return
-        }
+      if (user.userId === gameData.hostId) {
+        setAmHost(true)
+        return
       }
     }
     setAmHost(false)
@@ -50,7 +49,7 @@ const Lobby = () => {
       setGameData(res.data.foundGame)
     })
 
-    socket.on('game initialize', (res) => {
+    socket.on('game initialized', (res) => {
       console.log('game initialized hit', res)
     })
 

@@ -46,7 +46,7 @@ for (let i = 0; i < fellowship.length; i++) {
     userAccounts.push(newUser)
 
     // dynamically setup game params based on userId
-    let password = newUser.userId % 2 === 0 ? 'guest' : 'speakFriendAndEnter'
+    let password = newUser.userId % 2 === 0 ? 'default' : 'asdf'
     let locked = newUser.userId % 2 === 0 ? false : true
     let limit = newUser.userId % 2 === 0 ? 4 : 6
     let dice = newUser.userId % 2 === 0 ? 4 : 6
@@ -58,59 +58,59 @@ for (let i = 0; i < fellowship.length; i++) {
             password: password,
             active: true,
             playerLimit: limit,
-            startingDice: dice
+            startingDice: dice,
+            hostId: newUser.userId
         }
     )
 
     // add host to new game
     await newGame.createPlayer({
-        host: true,
-        userId: newUser.userId
+        userId: newUser.userId,
+        dice: dice
     })
 }
-
 
 
 // add each user to 2 random games
-for (let i = 0; i < userAccounts.length; i++) {
+// for (let i = 0; i < userAccounts.length; i++) {
 
-    // get all games that haven't been created by the user
-    let allGames = await Game.findAll({
-        where: {
-            active: true
-        },
-        include: [
-            {
-                model: Player,
-                include: {
-                    model: User,
-                    where: {
-                            userId: {[Op.ne]: userAccounts[i].userId}
-                    }
-                }
-            },
-        ]
-    })
+//     // get all games that haven't been created by the user
+//     let allGames = await Game.findAll({
+//         where: {
+//             active: true
+//         },
+//         include: [
+//             {
+//                 model: Player,
+//                 include: {
+//                     model: User,
+//                     where: {
+//                             userId: {[Op.ne]: userAccounts[i].userId}
+//                     }
+//                 }
+//             },
+//         ]
+//     })
 
-    // select two random games from filtered list
-    const randomGames = lodash.shuffle(allGames).splice(0, 2)
+//     // select two random games from filtered list
+//     const randomGames = lodash.shuffle(allGames).splice(0, 2)
 
-    // add current user as player to games
-    await randomGames[0].createPlayer(
-        {
-            host: false,
-            userId: userAccounts[i].userId
-        }
-    )
+//     // add current user as player to games
+//     await randomGames[0].createPlayer(
+//         {
+//             host: false,
+//             userId: userAccounts[i].userId
+//         }
+//     )
 
-    await randomGames[1].createPlayer(
-        {
-            host: false,
-            userId: userAccounts[i].userId
-        }
-    )
+//     await randomGames[1].createPlayer(
+//         {
+//             host: false,
+//             userId: userAccounts[i].userId
+//         }
+//     )
 
-}
+// }
 
 
 db.close()
