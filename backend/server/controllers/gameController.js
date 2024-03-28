@@ -4,6 +4,7 @@ import { Op } from 'sequelize'
 
 const gameFunctions = {
     newGame: async (body) => {
+        console.log('new game body', body)
         let { name, locked, password, playerLimit, startingDice, userId } = body
 
         // Checks to see if game name already exists
@@ -16,7 +17,7 @@ const gameFunctions = {
 
         if (gameCheck) {
             // res.status(400).send({ message: 'Name already in use' })
-            return{ message: 'Name already in use' }
+            return { message: 'Name already in use' }
         }
 
         name = name.replace("'", "''")
@@ -26,6 +27,8 @@ const gameFunctions = {
             name, password, locked, playerLimit, startingDice
         })
 
+
+
         // Creates player and assigns game creater as host
         if (game) {
             await game.createPlayer({
@@ -33,9 +36,25 @@ const gameFunctions = {
                 userId: userId
             })
 
+            let foundGame = await Game.findOne(
+                {
+                    where: {
+                        name: game.name,
+                        // password: password
+                    },
+                    include: {
+                        model: Player,
+                        include: {
+                            model: User
+                        }
+                    }
+                }
+            )
             // res.status(201).send({ message: 'Game created', game })
-            return { message: 'Game created', game }
+            return { message: 'Game created', game: foundGame }
         }
+
+
 
         return { message: 'Game creation failed' }
         // res.status(400).send({ message: 'Game creation failed' })
@@ -70,7 +89,7 @@ const gameFunctions = {
         // Finds game with matching name
         console.log('game name', obj.name)
 
-        const foundGame = await Game.findOne(
+        let foundGame = await Game.findOne(
             {
                 where: {
                     name: obj.name,
@@ -102,7 +121,22 @@ const gameFunctions = {
                         userId: obj.userId
                     })
 
-                    return { message: 'Game joined', player }
+                    foundGame = await Game.findOne(
+                        {
+                            where: {
+                                name: obj.name,
+                                // password: password
+                            },
+                            include: {
+                                model: Player,
+                                include: {
+                                    model: User
+                                }
+                            }
+                        }
+                    )
+
+                    return { message: 'Game joined', player, foundGame }
                 } else {
                     console.log('no userId hit')
                     // Create temp user with unique username tied to game
@@ -117,7 +151,22 @@ const gameFunctions = {
                         userId: tempUser.userId,
                     })
 
-                    return { message: 'Game joined as guest', player }
+                    foundGame = await Game.findOne(
+                        {
+                            where: {
+                                name: obj.name,
+                                // password: password
+                            },
+                            include: {
+                                model: Player,
+                                include: {
+                                    model: User
+                                }
+                            }
+                        }
+                    )
+
+                    return { message: 'Game joined as guest', player, foundGame }
                 }
             } else {
                 console.log('no userId no password hit')
@@ -133,7 +182,22 @@ const gameFunctions = {
                     userId: tempUser.userId,
                 })
 
-                return { message: 'Game joined as guest', player }
+                foundGame = await Game.findOne(
+                    {
+                        where: {
+                            name: obj.name,
+                            // password: password
+                        },
+                        include: {
+                            model: Player,
+                            include: {
+                                model: User
+                            }
+                        }
+                    }
+                )
+
+                return { message: 'Game joined as guest', player, foundGame }
             }
         }
         return { message: 'game not found' }
@@ -142,6 +206,23 @@ const gameFunctions = {
     startGame: async (req, res) => {
         res.status(200).send({ message: 'Game started' })
     },
+
+    findGame: async (body) => {
+
+        const game = await Game.findOne({
+            where: {
+                gameId: body.gameId
+            },
+            include: {
+                model: Player,
+                include: {
+                    model: User
+                }
+            }
+        })
+
+        return game
+    }
 }
 
 export default gameFunctions

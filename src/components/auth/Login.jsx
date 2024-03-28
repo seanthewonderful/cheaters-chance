@@ -21,7 +21,7 @@ const Login = ({ registerClick }) => {
 
     axios.post(`/api/login`, body)
     .then(res => {
-      alert(res.data.message)
+      // alert(res.data.message)
       dispatch({
         type: 'SET_USER',
         payload: res.data.user

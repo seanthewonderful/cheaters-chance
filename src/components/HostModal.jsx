@@ -12,12 +12,12 @@ const HostModal = ({ isOpen, closeModal, user }) => {
   const [playerLimit, setPlayerLimit] = useState(6)
   const [startingDice, setStartingDice] = useState(5)
   const [gamePassword, setGamePassword] = useState({ required: false, password: '' })
-  const userId = useSelector(state => state.userId)
+  const userId = useSelector(state => state.user.userId)
 
   useEffect(() => {
     socket.on('host game data', (data) => {
-      console.log('hot game data full', data)
-      navigate('/scuttlebutt/profile')
+      console.log('host game data full', data)
+      navigate(`/scuttlebutt/lobby/${data.game.gameId}`)
     })
   }, [])
 
@@ -25,6 +25,8 @@ const HostModal = ({ isOpen, closeModal, user }) => {
 
   const createGame = (e) => {
     e.preventDefault()
+
+    console.log('create game hit', userId)
 
     const body = {
       name: gameName,
