@@ -54,14 +54,13 @@ io.on('connection', async (socket) => {
         socket.broadcast.emit('goodbye', {data: 'sup boiiii'})
     })
 
-    socket.on('joinGame', async (body) => {
+    socket.on('join game', async (body) => {
         console.log('join game hit')
-        console.log(body)
+        // console.log(body)
 
         let joinedData = await joinGame(body)
-        console.log(joinedData)
+        console.log('joined data', joinedData)
 
-        
         socket.join(joinedData.foundGame.name)
 
         socket.emit('join game hit', {data: joinedData})
@@ -69,7 +68,7 @@ io.on('connection', async (socket) => {
         io.to(joinedData.foundGame.name).emit('new player', {data: joinedData, message: 'new player joined'})
     })
 
-    socket.on('hostGame', async (body) => {
+    socket.on('host game', async (body) => {
         console.log('host game hit')
 
         if(rooms[body.name]){
@@ -77,22 +76,23 @@ io.on('connection', async (socket) => {
         }
         let hostGameData = await newGame(body)
 
-        console.log('host game data', hostGameData)
+        // console.log('host game data', hostGameData)
 
         if(hostGameData.game){
-            rooms[hostGameData.game.name] = hostGameData.game.password
+            rooms[hostGameData.game.name] = body.password
 
             socket.join(hostGameData.game.name)
 
             socket.emit('host game data', hostGameData)
         } else {
-            socket.emit('gameFailure', {message: hostGameData.message})
+            socket.emit('game failure', {message: hostGameData.message})
         }
     })
 
     socket.on('start game', async (body) => {
-      console.log('start game hit')
-      console.log(body)
+    //   console.log('start game hit')
+    //   console.log(body)
+    // console.log('body name', body.name)
       io.to(body.name).emit('game initialized', body)
     })
 

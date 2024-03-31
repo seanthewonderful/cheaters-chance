@@ -29,9 +29,9 @@ const JoinModal = ({ game, toggleModal }) => {
 
   const onSubmit = () => {
     if (game.password !== 'default') {
-      socket.emit('joinGame', { name: game.name, password: password, userId })
+      socket.emit('join game', { name: game.name, password: password, userId })
     } else {
-      socket.emit('joinGame', { name: game.name, password: 'default', userId })
+      socket.emit('join game', { name: game.name, password: 'default', userId })
     }
   }
 

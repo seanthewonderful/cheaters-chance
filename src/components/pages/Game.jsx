@@ -7,7 +7,7 @@ import { useState } from 'react'
 const Game = () => {
 
   const initialGameData = useSelector(state => state.game)
-  console.log(initialGameData)
+  console.log('game page initial data', initialGameData)
 
   const [gameData, setGameData] = useState(initialGameData)
 
