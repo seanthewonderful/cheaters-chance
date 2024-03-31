@@ -1,50 +1,88 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import Player from '../Player'
 import Opponent from '../Opponent'
 import Dice from '../Dice'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import socket from '../../functions/socket.js'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Lobby = () => {
-    // console.log('lobby socket', socket)
 
-    const [gameData, setGameData] = useState({})
+  const [gameData, setGameData] = useState({})
+  const [amHost, setAmHost] = useState(false)
+  
+  const user = useSelector(state => state.user)
+  const { gameId } = useParams()
 
-    const {gameId} = useParams()
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-    // console.log('gameId', gameId)
+  // figure out if user is host by matching host.userId to user.userId
+  const figureIfHost = () => {
+    if (user) {
+      if (user.userId === gameData.hostId) {
+        setAmHost(true)
+        return
+      }
+    }
+    setAmHost(false)
+  }
 
-    useEffect(() => {
-        socket.emit('get room', {gameId})
+  console.log("amHost: ", amHost)
 
-        socket.on('room data', (res) => {
-            // console.log('lobby room data',res.data)
-            setGameData(res.data)
-          })
+  const startGame = () => {
+    socket.emit('start game', gameData)
+  }
 
-          socket.on('new player', (res) => {
-            console.log('new player joined', res.message, res.data.players)
-            console.log('GAME DATA', gameData)
-            console.log('RESPONSE GAME DATA', res.data.foundGame)
-            setGameData(res.data.foundGame)
-        })
+  useEffect(() => {
+    socket.emit('get room', { gameId })
 
-    }, [])
+    socket.on('room data', (res) => {
+      setGameData(res.data)
+    })
 
-    console.log(gameData.players)
+    socket.on('new player', (res) => {
+      setGameData(res.data.foundGame)
+    })
 
-    const allPlayers = gameData.players ? gameData.players.map((el, i) => {
+    socket.on('game initialized', (res) => {
+      console.log('game initialized hit', res)
+      dispatch({
+        type: 'SET_GAME',
+        payload: res
+      })
+      navigate(`/scuttlebutt/game`)
+    })
+
+  }, [])
+
+  useEffect(() => {
+    figureIfHost()
+  }, [gameData])
+
+  const allPlayers = gameData.players ? gameData.players.map((el, i) => {
     return <section key={i}>
       <p>Player Id: {el.playerId}</p>
       <p>Player Name: {el.user.username}</p>
     </section>
-  })
-      :
-  []
+    })
+    :
+    []
 
   return (
     <div>Lobby
+
+      <section id='host-start-section'>
+        {amHost && (
+          <button 
+            id='host-start-btn'
+            onClick={startGame}
+            >
+              Start Game
+          </button>
+        )}
+      </section>
 
       <section>
         {allPlayers}

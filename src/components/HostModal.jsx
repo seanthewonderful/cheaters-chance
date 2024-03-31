@@ -33,19 +33,11 @@ const HostModal = ({ isOpen, closeModal, user }) => {
       playerLimit: playerLimit,
       startingDice: startingDice,
       locked: gamePassword.required,
-      password: gamePassword.required === false ? 'guest' : guest.password.password,
+      password: gamePassword.required === false ? 'default' : gamePassword.password,
       userId: userId
     }
 
     socket.emit('hostGame', body)
-
-    // axios.post(`/api/newGame`, body)
-    // .then(res => {
-    //   console.log(res.data.message)
-    //   closeModal()
-    //   navigate('/scuttlebutt/profile')
-    // })
-    // .catch(err => console.log(err))
   }
 
   if (!isOpen) return null;
