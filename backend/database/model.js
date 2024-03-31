@@ -90,6 +90,16 @@ Game.init({
   startingDice: {
     type: DataTypes.INTEGER,
     allowNull: false
+  },
+  currentCount: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+    },
+  currentValue: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
   }
 }, {
   modelName: 'game',
