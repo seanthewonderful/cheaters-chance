@@ -2,7 +2,8 @@ import Player from '../Player'
 import Opponent from '../Opponent'
 import Dice from '../Dice'
 import { useSelector } from 'react-redux'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Game = () => {
 
@@ -11,6 +12,13 @@ const Game = () => {
 
   const [gameData, setGameData] = useState(initialGameData)
 
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!initialGameData) {
+      navigate("/scuttlebutt/join")
+    }
+  })
 
   return (
     <div>Game</div>

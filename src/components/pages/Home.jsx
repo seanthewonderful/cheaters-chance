@@ -85,14 +85,12 @@ const Home = () => {
       />
 
       <div>
-        <button onClick={loginClick}>Login</button>
-        <button onClick={registerClick}>Register</button>
-        <button onClick={logoutClick}>Logout</button>
+        {!user && <section>
+          <button onClick={loginClick}>Login</button>
+          <button onClick={registerClick}>Register</button>
+        </section>}
+        {user && <button onClick={logoutClick}>Logout</button>}
       </div>
-{/*
-      <div>
-        <button onClick={playAsGuest}>Play as Guest</button>
-      </div> */}
 
       <div>
         <button
