@@ -11,7 +11,7 @@ const Lobby = () => {
 
   const [gameData, setGameData] = useState({})
   const [amHost, setAmHost] = useState(false)
-  
+
   const user = useSelector(state => state.user)
   const { gameId } = useParams()
 
@@ -20,6 +20,8 @@ const Lobby = () => {
 
   // figure out if user is host by matching host.userId to user.userId
   const figureIfHost = () => {
+    console.log('user', user)
+    console.log('gameData', gameData)
     if (user) {
       if (user.userId === gameData.hostId) {
         setAmHost(true)
@@ -75,7 +77,7 @@ const Lobby = () => {
 
       <section id='host-start-section'>
         {amHost && (
-          <button 
+          <button
             id='host-start-btn'
             onClick={startGame}
             >

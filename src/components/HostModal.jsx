@@ -37,7 +37,7 @@ const HostModal = ({ isOpen, closeModal, user }) => {
       userId: userId
     }
 
-    socket.emit('hostGame', body)
+    socket.emit('host game', body)
   }
 
   if (!isOpen) return null;

@@ -112,12 +112,42 @@ Player.init({
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  one: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  two: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  three: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  four: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  five: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  six: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
 }, {
   modelName: 'player',
   sequelize: db
 })
 
-// Each game has one host - 
+// Each game has one host -
 User.hasMany(Game, {
   foreignKey: "hostId"
 })

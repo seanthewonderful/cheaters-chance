@@ -15,7 +15,6 @@ import socket from '../../functions/socket.js'
 const Home = () => {
 
   const checkSocket = () => {
-    console.log('hit')
     socket.emit('greet', (res) => {
       console.log('response', res)
     })
@@ -90,10 +89,10 @@ const Home = () => {
         <button onClick={registerClick}>Register</button>
         <button onClick={logoutClick}>Logout</button>
       </div>
-
+{/*
       <div>
         <button onClick={playAsGuest}>Play as Guest</button>
-      </div>
+      </div> */}
 
       <div>
         <button
