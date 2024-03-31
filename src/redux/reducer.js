@@ -1,5 +1,6 @@
 const initialState = {
-  user: null
+  user: null,
+  game: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -9,6 +10,19 @@ export default function reducer(state = initialState, action) {
       return {
        ...state,
         user: action.payload
+      }
+
+    case 'LOGOUT':
+      return {
+        ...state,
+        user: null,
+        game: null
+      }
+
+    case 'SET_GAME':
+      return {
+        ...state,
+        game: action.payload
       }
 
     default:

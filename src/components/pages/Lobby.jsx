@@ -5,7 +5,7 @@ import Dice from '../Dice'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import socket from '../../functions/socket.js'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Lobby = () => {
 
@@ -16,6 +16,7 @@ const Lobby = () => {
   const { gameId } = useParams()
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   // figure out if user is host by matching host.userId to user.userId
   const figureIfHost = () => {
@@ -38,19 +39,20 @@ const Lobby = () => {
     socket.emit('get room', { gameId })
 
     socket.on('room data', (res) => {
-      // console.log('lobby room data',res.data)
       setGameData(res.data)
     })
 
     socket.on('new player', (res) => {
-      // console.log('new player joined', res.message, res.data.players)
-      // console.log('GAME DATA', gameData)
-      // console.log('RESPONSE GAME DATA', res.data.foundGame)
       setGameData(res.data.foundGame)
     })
 
     socket.on('game initialized', (res) => {
       console.log('game initialized hit', res)
+      dispatch({
+        type: 'SET_GAME',
+        payload: res
+      })
+      navigate(`/scuttlebutt/game`)
     })
 
   }, [])

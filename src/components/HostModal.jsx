@@ -33,7 +33,7 @@ const HostModal = ({ isOpen, closeModal, user }) => {
       playerLimit: playerLimit,
       startingDice: startingDice,
       locked: gamePassword.required,
-      password: gamePassword.required === false ? 'default' : guest.password.password,
+      password: gamePassword.required === false ? 'default' : gamePassword.password,
       userId: userId
     }
 
