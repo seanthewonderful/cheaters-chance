@@ -20,6 +20,10 @@ const Game = () => {
 
   const self = gameData.players.filter(player => player.user.userId === user.userId)[0]
 
+  const opponents = gameData.players
+    .filter(player => player.user.userId !== user.userId)
+    .map(opponent => <Opponent player={opponent} />)
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -36,7 +40,9 @@ const Game = () => {
         <p>Dice Value: {gameData.currentValue}</p>
         <p>Player Turn: {gameData.players[gameData.turn].user.username}</p>
       </section>
-      <section>Opponents</section>
+      <section>Opponents:
+        {opponents}
+      </section>
       <section>
         {<Player player={self} />}
         {gameData.turn === self.turn ? (

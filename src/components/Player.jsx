@@ -3,8 +3,8 @@ import { FaDiceOne, FaDiceTwo, FaDiceThree, FaDiceFour, FaDiceFive, FaDiceSix } 
 const Player = ({ player }) => {
 
   return (
-    <div>
-      
+    <div id="player-div">
+
       <p>Player: {player.user.username}</p>
       <p>Total Dice: {player.dice}</p>
 
