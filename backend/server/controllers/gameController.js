@@ -54,7 +54,8 @@ const gameFunctions = {
     if (game) {
       await game.createPlayer({
         userId: userId,
-        dice: startingDice
+        dice: startingDice,
+        turn: 0
       })
 
       let foundGame = await Game.findOne({
@@ -146,7 +147,8 @@ const gameFunctions = {
 
         const player = await foundGame.createPlayer({
           userId: body.userId,
-          dice: foundGame.startingDice
+          dice: foundGame.startingDice,
+          turn: foundGame.players.length
         })
 
         foundGame = await Game.findOne({

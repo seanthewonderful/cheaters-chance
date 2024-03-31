@@ -122,3 +122,10 @@ form {
 #menu-icon {
   transition: 0.3s ease-in-out;
 }
+
+#player-div {
+  border: 1px solid green;
+}
+#opponent-div {
+  border: 1px solid red;
+}

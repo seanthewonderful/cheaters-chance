@@ -100,6 +100,11 @@ Game.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 0
+  },
+  turn: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
   }
 }, {
   modelName: 'game',
@@ -121,6 +126,10 @@ Player.init({
   dice: {
     type: DataTypes.INTEGER,
     allowNull: false,
+  },
+  turn: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   one: {
     type: DataTypes.INTEGER,

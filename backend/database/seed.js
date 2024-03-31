@@ -66,7 +66,8 @@ for (let i = 0; i < fellowship.length; i++) {
     // add host to new game
     await newGame.createPlayer({
         userId: newUser.userId,
-        dice: dice
+        dice: dice,
+        turn: 0
     })
 }
 

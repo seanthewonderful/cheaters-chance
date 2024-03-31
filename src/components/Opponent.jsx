@@ -1,8 +1,12 @@
 import React from 'react'
 
-const Opponent = () => {
+const Opponent = ({ player }) => {
+
   return (
-    <div>Opponent</div>
+    <div id='opponent-div'>
+      <p>Player: {player.user.username}</p>
+      <p>Total Dice: {player.dice}</p>
+    </div>
   )
 }
 
