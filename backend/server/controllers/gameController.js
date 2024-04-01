@@ -183,10 +183,18 @@ const gameFunctions = {
     }
   },
 
-  startGame: async (req, res) => {
-    res.status(200).send({
-      message: 'Game started'
+  startGame: async (gameId) => {
+    let game = await Game.findByPk(gameId)
+    await game.update({ active: false })
+    game = await Game.findByPk(gameId, {
+      include: {
+        model: Player,
+        include: {
+          model: User
+        }
+      }
     })
+    return game
   },
 
   findGame: async (body) => {

@@ -20,8 +20,6 @@ const Lobby = () => {
 
   // figure out if user is host by matching host.userId to user.userId
   const figureIfHost = () => {
-    console.log('user', user)
-    console.log('gameData', gameData)
     if (user) {
       if (user.userId === gameData.hostId) {
         setAmHost(true)
@@ -30,8 +28,6 @@ const Lobby = () => {
     }
     setAmHost(false)
   }
-
-  console.log("amHost: ", amHost)
 
   const startGame = () => {
     socket.emit('start game', gameData)
