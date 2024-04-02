@@ -1,4 +1,3 @@
-import {useState, useEffect} from 'react'
 import axios from 'axios'
 import GameListItem from '../GameListItem'
 import { useLoaderData } from 'react-router-dom'
