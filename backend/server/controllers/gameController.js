@@ -168,10 +168,10 @@ const gameFunctions = {
           player,
           foundGame
         }
- 
+
       } else {
         console.log('password does not match')
-        
+
         return {
           message: 'Password incorrect',
         }

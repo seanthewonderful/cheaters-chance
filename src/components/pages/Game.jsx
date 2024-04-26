@@ -32,6 +32,8 @@ const Game = () => {
     }
   })
 
+
+
   return (
     <div id='game-div'>
       <section>
@@ -69,6 +71,9 @@ const Game = () => {
           <button>LIAR!</button>
         )
         }
+      </section>
+      <section>
+        <Dice />
       </section>
     </div>
   )

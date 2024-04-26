@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import AuthModal from '../AuthModal.jsx'
 import sessionCheck from '../../functions/sessionCheck.js'
 import axios from 'axios'
+import Dice from '../Dice.jsx'
 
 // import io from 'socket.io-client'
 
@@ -111,6 +112,8 @@ const Home = () => {
       </div>
 
       <button onClick={checkSocket}>Click me</button>
+
+      {/* <Dice /> */}
 
     </div>
   )
