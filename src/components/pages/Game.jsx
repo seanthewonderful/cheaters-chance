@@ -1,21 +1,21 @@
 import Player from '../Player'
 import Opponent from '../Opponent'
-import Dice from '../Dice'
+import socket from '../../functions/socket'
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const Game = () => {
 
+  const navigate = useNavigate()
+
   const user = useSelector(state => state.user)
   const initialGameData = useSelector(state => state.game)
-  console.log('game page initial data', initialGameData)
 
   const [gameData, setGameData] = useState(initialGameData)
-
   const [bet, setBet] = useState({
-    count: initialGameData.currentCount,
-    value: initialGameData.currentValue
+    count: gameData.currentCount,
+    value: gameData.currentValue === 0 ? 1 : gameData.currentValue
   })
 
   const self = gameData.players.filter(player => player.user.userId === user.userId)[0]
@@ -24,13 +24,43 @@ const Game = () => {
     .filter(player => player.user.userId !== user.userId)
     .map(opponent => <Opponent player={opponent} />)
 
-  const navigate = useNavigate()
+  const placeBet = () => {
+
+    if (bet.count < gameData.currentCount) {
+      alert("You cannot decrease the count.")
+      return
+    } else if (bet.count == gameData.currentCount && bet.value == gameData.currentValue) {
+      alert("You must increase at least the count or value to place a bet.")
+    } else if (bet.count == gameData.currentCount && bet.value <= gameData.currentValue) {
+      alert("You must increase the dice value if you do not increase the count.")
+      return
+    }
+
+    socket.emit('place bet', { 
+      bet, 
+      playerId: self.playerId, 
+      gameId: gameData.gameId 
+    })
+  }
 
   useEffect(() => {
     if (!initialGameData) {
       navigate("/scuttlebutt/join")
     }
-  })
+  }, [])
+
+  useEffect(() => {
+    socket.on('bet placed', (res) => {
+      setGameData(res.gameData)
+    })
+
+    // unmounting function firing on mount - need to investigate 🔎
+    return () => {
+      console.log("CLEANUP FUNCTION")
+      socket.emit('player disconnect', { playerId: self.playerId })
+    }
+
+  }, [])
 
   return (
     <div id='game-div'>
@@ -59,11 +89,11 @@ const Game = () => {
             <input
               type='number'
               value={bet.value}
-              min={0}
+              min={1}
               max={6}
               onChange={e => setBet({ ...bet, value: e.target.value })}
             />
-            <button>Place yer Bet</button>
+            <button onClick={placeBet}>Place yer Bet</button>
           </>
         ) : (
           <button>LIAR!</button>
