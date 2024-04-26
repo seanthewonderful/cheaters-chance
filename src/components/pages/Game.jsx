@@ -11,22 +11,31 @@ const Game = () => {
 
   const user = useSelector(state => state.user)
   const initialGameData = useSelector(state => state.game)
-  console.log('game page initial data', initialGameData)
 
   const [gameData, setGameData] = useState(initialGameData)
   const [bet, setBet] = useState({
     count: gameData.currentCount,
-    value: gameData.currentValue
+    value: gameData.currentValue === 0 ? 1 : gameData.currentValue
   })
 
   const self = gameData.players.filter(player => player.user.userId === user.userId)[0]
-  console.log(self)
 
   const opponents = gameData.players
     .filter(player => player.user.userId !== user.userId)
     .map(opponent => <Opponent player={opponent} />)
 
   const placeBet = () => {
+
+    if (bet.count < gameData.currentCount) {
+      alert("You cannot decrease the count.")
+      return
+    } else if (bet.count == gameData.currentCount && bet.value == gameData.currentValue) {
+      alert("You must increase at least the count or value to place a bet.")
+    } else if (bet.count == gameData.currentCount && bet.value <= gameData.currentValue) {
+      alert("You must increase the dice value if you do not increase the count.")
+      return
+    }
+    
     socket.emit('place bet', { 
       bet, 
       playerId: self.playerId, 
@@ -44,6 +53,7 @@ const Game = () => {
     socket.on('bet placed', (res) => {
       setGameData(res.gameData)
     })
+
   }, [])
 
   return (
@@ -73,7 +83,7 @@ const Game = () => {
             <input
               type='number'
               value={bet.value}
-              min={0}
+              min={1}
               max={6}
               onChange={e => setBet({ ...bet, value: e.target.value })}
             />
