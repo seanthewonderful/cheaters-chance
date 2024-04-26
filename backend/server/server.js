@@ -103,6 +103,10 @@ io.on('connection', async (socket) => {
       io.to(gameData.name).emit('bet placed', { gameData })
     })
 
+    socket.on('player disconnect', async (body) => {
+      console.log("PLAYER DISCONNECT -- ", body)
+    })
+
 })
 
 io.engine.on('connection_error', (err) => {

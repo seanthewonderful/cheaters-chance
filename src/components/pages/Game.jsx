@@ -35,7 +35,7 @@ const Game = () => {
       alert("You must increase the dice value if you do not increase the count.")
       return
     }
-    
+
     socket.emit('place bet', { 
       bet, 
       playerId: self.playerId, 
@@ -53,6 +53,12 @@ const Game = () => {
     socket.on('bet placed', (res) => {
       setGameData(res.gameData)
     })
+
+    // unmounting function firing on mount - need to investigate 🔎
+    return () => {
+      console.log("CLEANUP FUNCTION")
+      socket.emit('player disconnect', { playerId: self.playerId })
+    }
 
   }, [])
 

@@ -220,7 +220,7 @@ const gameFunctions = {
       include: Player 
     })
 
-    let turn = game.turn === game.players.length - 1 ? 0 : game.turn + 1
+    let turn = game.turn >= game.players.length - 1 ? 0 : game.turn + 1
 
     await game.update({
       currentCount: +body.bet.count,
