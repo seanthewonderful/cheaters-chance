@@ -3,7 +3,7 @@ import DiceBox from "@3d-dice/dice-box";
 import { DisplayResults, AdvancedRoller, BoxControls } from '@3d-dice/dice-ui'
 
 
-const Dice = () => {
+const Dice = ({turn}) => {
   const [allDice, setAllDice] = useState({'1': 0, '2': 0, '3': 0, '4': 0,'5': 0, '6': 0})
   const [showRoller, setShowRoller] = useState(true)
 

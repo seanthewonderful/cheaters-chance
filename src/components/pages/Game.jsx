@@ -4,6 +4,7 @@ import socket from '../../functions/socket'
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Dice from '../Dice.jsx'
 
 const Game = () => {
 
@@ -36,10 +37,10 @@ const Game = () => {
       return
     }
 
-    socket.emit('place bet', { 
-      bet, 
-      playerId: self.playerId, 
-      gameId: gameData.gameId 
+    socket.emit('place bet', {
+      bet,
+      playerId: self.playerId,
+      gameId: gameData.gameId
     })
   }
 
@@ -103,7 +104,7 @@ const Game = () => {
         }
       </section>
       <section>
-        <Dice />
+        <Dice turn={gameData.turn}/>
       </section>
     </div>
   )
