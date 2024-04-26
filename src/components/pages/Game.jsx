@@ -1,36 +1,50 @@
 import Player from '../Player'
 import Opponent from '../Opponent'
-import Dice from '../Dice'
+import socket from '../../functions/socket'
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const Game = () => {
 
+  const navigate = useNavigate()
+
   const user = useSelector(state => state.user)
   const initialGameData = useSelector(state => state.game)
   console.log('game page initial data', initialGameData)
 
   const [gameData, setGameData] = useState(initialGameData)
-
   const [bet, setBet] = useState({
-    count: initialGameData.currentCount,
-    value: initialGameData.currentValue
+    count: gameData.currentCount,
+    value: gameData.currentValue
   })
 
   const self = gameData.players.filter(player => player.user.userId === user.userId)[0]
+  console.log(self)
 
   const opponents = gameData.players
     .filter(player => player.user.userId !== user.userId)
     .map(opponent => <Opponent player={opponent} />)
 
-  const navigate = useNavigate()
+  const placeBet = () => {
+    socket.emit('place bet', { 
+      bet, 
+      playerId: self.playerId, 
+      gameId: gameData.gameId 
+    })
+  }
 
   useEffect(() => {
     if (!initialGameData) {
       navigate("/scuttlebutt/join")
     }
-  })
+  }, [])
+
+  useEffect(() => {
+    socket.on('bet placed', (res) => {
+      setGameData(res.gameData)
+    })
+  }, [])
 
   return (
     <div id='game-div'>
@@ -63,7 +77,7 @@ const Game = () => {
               max={6}
               onChange={e => setBet({ ...bet, value: e.target.value })}
             />
-            <button>Place yer Bet</button>
+            <button onClick={placeBet}>Place yer Bet</button>
           </>
         ) : (
           <button>LIAR!</button>

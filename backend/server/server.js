@@ -56,7 +56,6 @@ io.on('connection', async (socket) => {
 
     socket.on('join game', async (body) => {
         console.log('join game hit')
-        // console.log(body)
 
         let joinedData = await joinGame(body)
         console.log('joined data', joinedData)
@@ -76,8 +75,6 @@ io.on('connection', async (socket) => {
         }
         let hostGameData = await newGame(body)
 
-        // console.log('host game data', hostGameData)
-
         if(hostGameData.game){
             rooms[hostGameData.game.name] = body.password
 
@@ -95,11 +92,16 @@ io.on('connection', async (socket) => {
     })
 
     socket.on('get room', async (body) => {
-        const foundGame = await findGame(body)
+      const foundGame = await findGame(body)
 
-        socket.emit('room data', {data: foundGame})
+      socket.emit('room data', {data: foundGame})
     })
 
+    socket.on('place bet', async (body) => {
+      const gameData = await placeBet(body)
+
+      io.to(gameData.name).emit('bet placed', { gameData })
+    })
 
 })
 
@@ -116,7 +118,7 @@ app.get('/api/sessionCheck', sessionCheck)
 
 
 // GAME ENDPOINTS
-const { newGame, allGames, joinGame, startGame, findGame } = gameFunctions
+const { newGame, allGames, joinGame, startGame, findGame, placeBet } = gameFunctions
 app.post('/api/newGame', newGame)
 app.get('/api/allGames', allGames)
 app.post('/api/joinGame', joinGame)

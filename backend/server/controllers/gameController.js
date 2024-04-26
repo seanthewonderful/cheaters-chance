@@ -212,6 +212,32 @@ const gameFunctions = {
     })
 
     return game
+  },
+
+  placeBet: async (body) => {
+
+    let game = await Game.findByPk(body.gameId, { 
+      include: Player 
+    })
+
+    let turn = game.turn === game.players.length - 1 ? 0 : game.turn + 1
+
+    await game.update({
+      currentCount: +body.bet.count,
+      currentValue: +body.bet.value,
+      turn: turn
+    })
+
+    game = await Game.findByPk(body.gameId, {
+      include: {
+        model: Player,
+        include: {
+          model: User
+        }
+      }
+    })
+
+    return game
   }
 }
 
