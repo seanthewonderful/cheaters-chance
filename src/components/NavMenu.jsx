@@ -46,13 +46,6 @@ const NavMenu = () => {
               >
                 Join Game
               </NavLink>
-         
-            <NavLink 
-              className="menu-item" 
-              to="/scuttlebutt/host"
-              >
-                Host Game
-              </NavLink>
       
             <NavLink 
               className="menu-item" 

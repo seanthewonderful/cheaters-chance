@@ -12,10 +12,12 @@ const Scuttlebutt = () => {
     sessionCheck(dispatch)
   }, [])
 
+  console.log("Parent rendering")
+
   return (
     <div>
       <NavMenu />
-      <Outlet/>
+      <Outlet />
     </div>
   )
 }
