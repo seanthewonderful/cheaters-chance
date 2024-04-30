@@ -55,18 +55,11 @@ const Game = () => {
     })
 
     // unmounting function firing on mount - need to investigate 🔎
-    // return () => {
-    //   console.log("CLEANUP FUNCTION")
-    //   socket.emit('player disconnect', { playerId: self.playerId })
-    // }
-    
-  }, [])
-  
-  useEffect(() => {
     return () => {
       console.log("CLEANUP FUNCTION")
       socket.emit('player disconnect', { playerId: self.playerId })
     }
+    
   }, [])
 
   return (

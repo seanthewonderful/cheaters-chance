@@ -55,7 +55,6 @@ io.on('connection', async (socket) => {
     })
 
     socket.on('join game', async (body) => {
-        console.log('join game hit')
 
         let joinedData = await joinGame(body)
 

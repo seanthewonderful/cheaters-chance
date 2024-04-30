@@ -98,7 +98,6 @@ const gameFunctions = {
     })
 
     if (gameList) {
-      console.log(gameList)
 
       // Filters out full games
       const filteredGames = gameList.filter((game => game.players.length < game.playerLimit))
@@ -117,9 +116,6 @@ const gameFunctions = {
 
   joinGame: async (body) => {
 
-    // Finds game with matching name
-    console.log('body: ', body)
-
     if (!body.userId) {
       return {
         message: "You must be logged in"
@@ -135,8 +131,6 @@ const gameFunctions = {
         model: Player
       }
     })
-
-    console.log(foundGame)
 
     // Checks if the passwords match
     if (foundGame) {
