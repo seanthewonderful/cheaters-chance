@@ -7,15 +7,10 @@ import socket from '../functions/socket'
 
 const Dice = ({turn, self}) => {
   const dispatch = useDispatch()
-  const user = useSelector(state => state.user)
   const initialGameData = useSelector(state => state.game)
 
   const [allDice, setAllDice] = useState({'1': 0, '2': 0, '3': 0, '4': 0,'5': 0, '6': 0})
   const [showRoller, setShowRoller] = useState(true)
-  // const [gameData, setGameData] = useState(initialGameData)
-
-
-
 
   useEffect(() => {
     console.log(allDice)
@@ -73,53 +68,43 @@ const Dice = ({turn, self}) => {
         // })
   }, [])
 
+  const colors = [
+    "#348888",
+    "#22BABB",
+    "#9EF8EE",
+    "#FA7F08",
+    "#F24405",
+    "#F25EB0",
+    "#B9BF04",
+    "#F2B705",
+    "#F27405",
+    "#F23005"
+  ];
 
+  function get_random(list) {
+    return list[Math.floor(Math.random() * list.length)];
+  }
 
-    const colors = [
-      "#348888",
-      "#22BABB",
-      "#9EF8EE",
-      "#FA7F08",
-      "#F24405",
-      "#F25EB0",
-      "#B9BF04",
-      "#F2B705",
-      "#F27405",
-      "#F23005"
-    ];
+  const rollDice = () => {
+    Box.roll(["5d6"], {
+      themeColor: get_random(colors)
+    }).then(res => {
+      const allCopy = {...allDice}
 
+      res.forEach((die) => {
+        allCopy[die.value]++
+      })
 
+      socket.emit('dice roll', {
+        dice: allCopy,
+        playerId: self.playerId,
+        gameId: initialGameData.gameId
+      })
 
-
-
-    function get_random(list) {
-      return list[Math.floor(Math.random() * list.length)];
-    }
-
-    const rollDice = () => {
-      Box.roll(["5d6"], {
-        themeColor: get_random(colors)
-      }).then(res => {
-        const allCopy = {...allDice}
-
-        res.forEach((die) => {
-          allCopy[die.value]++
-        })
-
-        socket.emit('dice roll', {
-          dice: allCopy,
-          playerId: self.playerId,
-          gameId: initialGameData.gameId
-        })
-
-        setAllDice(allCopy)
-        setShowRoller(false)
-        // Box = undefined
-      });
-
-    }
-
-
+      setAllDice(allCopy)
+      setShowRoller(false)
+    });
+  }
 
   return (
     <div>
