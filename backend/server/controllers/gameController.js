@@ -64,6 +64,7 @@ const gameFunctions = {
       let foundGame = await Game.findOne({
         where: {
           name: game.name,
+          active: true
           // password: password
         },
         include: {
@@ -128,17 +129,17 @@ const gameFunctions = {
     let foundGame = await Game.findOne({
       where: {
         name: body.name,
+        active: true
       },
       include: {
         model: Player
       }
     })
 
+    console.log(foundGame)
+
     // Checks if the passwords match
     if (foundGame) {
-      // console.log('game found!')
-      // console.log(foundGame.password)
-      // console.log(body.password)
 
       // if the provided password matches game's password AND provided password is NOT 'default'
       if (foundGame.password === body.password) {
@@ -157,6 +158,7 @@ const gameFunctions = {
         foundGame = await Game.findOne({
           where: {
             name: body.name,
+            active: true
           },
           include: {
             model: Player,

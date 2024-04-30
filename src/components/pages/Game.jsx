@@ -22,7 +22,7 @@ const Game = () => {
 
   const opponents = gameData.players
     .filter(player => player.user.userId !== user.userId)
-    .map(opponent => <Opponent player={opponent} />)
+    .map(opponent => <Opponent key={opponent.user.userId} player={opponent} />)
 
   const placeBet = () => {
 
@@ -55,11 +55,18 @@ const Game = () => {
     })
 
     // unmounting function firing on mount - need to investigate 🔎
+    // return () => {
+    //   console.log("CLEANUP FUNCTION")
+    //   socket.emit('player disconnect', { playerId: self.playerId })
+    // }
+    
+  }, [])
+  
+  useEffect(() => {
     return () => {
       console.log("CLEANUP FUNCTION")
       socket.emit('player disconnect', { playerId: self.playerId })
     }
-
   }, [])
 
   return (

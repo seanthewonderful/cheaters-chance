@@ -22,6 +22,7 @@ const JoinModal = ({ game, toggleModal }) => {
     })
 
     socket.on('join game hit', (res) => {
+      console.log("FOUND GAME ID: ", res.data.foundGame.gameId)
       navigate(`/scuttlebutt/lobby/${res.data.foundGame.gameId}`)
     })
 
