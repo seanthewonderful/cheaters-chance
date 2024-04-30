@@ -105,6 +105,11 @@ Game.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 0
+  },
+  rollCount: {
+    type: DataTypes.INTEGER,
+    allowNull:false,
+    defaultValue: 0
   }
 }, {
   modelName: 'game',

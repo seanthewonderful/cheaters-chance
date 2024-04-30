@@ -49,24 +49,28 @@ const Register = ({ loginClick }) => {
           type="text"
           name="username"
           onChange={e => setUsername(e.target.value)}
+          autoComplete='off'
         />
         <label>Password: </label>
         <input
           type="password"
           name="password"
           onChange={e => setPassword(e.target.value)}
+          autoComplete='off'
         />
         <label>Confirm Password: </label>
         <input
           type="password"
           name="confirmPassword"
           onChange={e => setConfirmPassword(e.target.value)}
+          autoComplete='off'
         />
         <label>Image URL: </label>
         <input
           type="text"
           name="imageURL"
           onChange={e => setImgUrl(e.target.value)}
+          autoComplete='off'
         />
         <input type='submit' value='Register' />
       </form>
