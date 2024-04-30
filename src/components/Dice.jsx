@@ -1,15 +1,45 @@
 import {useState, useEffect} from 'react'
 import DiceBox from "@3d-dice/dice-box";
 import { DisplayResults, AdvancedRoller, BoxControls } from '@3d-dice/dice-ui'
+import { useSelector, useDispatch } from 'react-redux'
+import socket from '../functions/socket'
 
 
-const Dice = ({turn}) => {
+const Dice = ({turn, self}) => {
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
+  const initialGameData = useSelector(state => state.game)
+
   const [allDice, setAllDice] = useState({'1': 0, '2': 0, '3': 0, '4': 0,'5': 0, '6': 0})
   const [showRoller, setShowRoller] = useState(true)
+  // const [gameData, setGameData] = useState(initialGameData)
+
+
+
 
   useEffect(() => {
     console.log(allDice)
   }, [allDice])
+
+  useEffect(() => {
+    socket.on('room data', (res) => {
+      console.log('after dice roll', res)
+      dispatch({
+        type: 'SET_GAME',
+        payload: res.data
+      })
+    })
+
+    socket.on('all roll data', (res) => {
+      console.log('after dice roll', res)
+      dispatch({
+        type: 'SET_GAME',
+        payload: res.data
+      })
+    })
+
+
+  }, [])
 
   let Box;
 
@@ -24,23 +54,23 @@ const Dice = ({turn}) => {
       });
 
       Box.init()
-        .then(() => {
-          const Roller = new AdvancedRoller({
-            target: '#dice-box',
-            onSubmit: (notation) => Box.roll(notation),
-            onClear: () => {
-              Box.clear()
-              Display.clear()
-            },
-            onReroll: (rolls) => {
-              // loop through parsed roll notations and send them to the Box
-              rolls.forEach(roll => Box.add(roll))
-            },
-            onResults: (results) => {
-              Display.showResults(results)
-            }
-          })
-        })
+        // .then(() => {
+        //   const Roller = new AdvancedRoller({
+        //     target: '#dice-box',
+        //     onSubmit: (notation) => Box.roll(notation),
+        //     onClear: () => {
+        //       Box.clear()
+        //       Display.clear()
+        //     },
+        //     onReroll: (rolls) => {
+        //       // loop through parsed roll notations and send them to the Box
+        //       rolls.forEach(roll => Box.add(roll))
+        //     },
+        //     onResults: (results) => {
+        //       Display.showResults(results)
+        //     }
+        //   })
+        // })
   }, [])
 
 
@@ -76,7 +106,11 @@ const Dice = ({turn}) => {
           allCopy[die.value]++
         })
 
-
+        socket.emit('dice roll', {
+          dice: allCopy,
+          playerId: self.playerId,
+          gameId: initialGameData.gameId
+        })
 
         setAllDice(allCopy)
         setShowRoller(false)

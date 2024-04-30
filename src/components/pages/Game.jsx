@@ -14,6 +14,7 @@ const Game = () => {
   const initialGameData = useSelector(state => state.game)
 
   const [gameData, setGameData] = useState(initialGameData)
+
   const [bet, setBet] = useState({
     count: gameData.currentCount,
     value: gameData.currentValue === 0 ? 1 : gameData.currentValue
@@ -23,7 +24,7 @@ const Game = () => {
 
   const opponents = gameData.players
     .filter(player => player.user.userId !== user.userId)
-    .map(opponent => <Opponent player={opponent} />)
+    .map(opponent => <Opponent player={opponent} key={user.userId}/>)
 
   const placeBet = () => {
 
@@ -63,6 +64,25 @@ const Game = () => {
 
   }, [])
 
+  const liar = () => {
+    console.log(gameData)
+    const allDice = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
+
+    for(let i = 0; i < gameData.players.length; i++){
+      // for(let die in gameData.players[i]){
+        allDice['1'] += gameData.players[i]['1']
+        allDice['2'] += gameData.players[i]['2']
+        allDice['3'] += gameData.players[i]['3']
+        allDice['4'] += gameData.players[i]['4']
+        allDice['5'] += gameData.players[i]['5']
+        allDice['6'] += gameData.players[i]['6']
+      // }
+    }
+
+    console.log('totals', allDice)
+
+  }
+
 
 
   return (
@@ -99,12 +119,12 @@ const Game = () => {
             <button onClick={placeBet}>Place yer Bet</button>
           </>
         ) : (
-          <button>LIAR!</button>
+          <button onClick={liar}>LIAR!</button>
         )
         }
       </section>
       <section>
-        <Dice turn={gameData.turn}/>
+        <Dice turn={gameData.turn} self={self}/>
       </section>
     </div>
   )

@@ -37,6 +37,7 @@ const Lobby = () => {
     socket.emit('get room', { gameId })
 
     socket.on('room data', (res) => {
+      console.log('res')
       setGameData(res.data)
     })
 

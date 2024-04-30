@@ -216,8 +216,8 @@ const gameFunctions = {
 
   placeBet: async (body) => {
 
-    let game = await Game.findByPk(body.gameId, { 
-      include: Player 
+    let game = await Game.findByPk(body.gameId, {
+      include: Player
     })
 
     let turn = game.turn >= game.players.length - 1 ? 0 : game.turn + 1
@@ -238,6 +238,9 @@ const gameFunctions = {
     })
 
     return game
+  },
+  diceRoll: async (body) => {
+
   }
 }
 
