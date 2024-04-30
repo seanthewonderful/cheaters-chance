@@ -71,6 +71,7 @@ const HostModal = ({ isOpen, closeModal, user }) => {
           placeholder='Name your game'
           value={gameName}
           onChange={e => setGameName(e.target.value)}
+          autoComplete='off'
         />
 
         <span>
@@ -80,6 +81,7 @@ const HostModal = ({ isOpen, closeModal, user }) => {
           name='gamePassword'
           id='gamePassword'
           onChange={() => setGamePassword({ ...gamePassword, required: !gamePassword.required })}
+          autoComplete='off'
           />
         </span>
 

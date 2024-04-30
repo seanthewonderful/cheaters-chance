@@ -1,5 +1,17 @@
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const NotFound = () => {
+  const navigate = useNavigate()
+
+  const logoutClick = () => {
+    axios.get(`/api/logout`)
+    .then(res => {
+      navigate('/')
+    })
+  }
+
+
   return (
     <div id='not-found-div'>
 
@@ -14,7 +26,9 @@ const NotFound = () => {
           alt=""
         />
       </div>
-      
+
+      <button onClick={logoutClick}>Logout</button>
+
     </div>
   )
 }

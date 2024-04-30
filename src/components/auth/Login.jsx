@@ -41,12 +41,14 @@ const Login = ({ registerClick }) => {
           type="text"
           name="username"
           onChange={e => setUsername(e.target.value)}
+          autoComplete="off"
         />
         <label>Password: </label>
         <input
           type="password"
           name="password"
           onChange={e => setPassword(e.target.value)}
+          autoComplete="off"
         />
         <input type='submit' value='Login' />
       </form>

@@ -1,5 +1,6 @@
 import {
-  User
+  User,
+  Player
 } from '../../database/model.js'
 
 const userFunctions = {
@@ -77,6 +78,18 @@ const userFunctions = {
     })
   },
 
+  findPlayer: async (playerId) => {
+
+    const player = await Player.findOne({
+      where: {
+        playerId: playerId
+      }
+    })
+
+    return player
+
+  },
+
   sessionCheck: async (req, res) => {
 
     if (req.session.user) {
@@ -86,8 +99,8 @@ const userFunctions = {
       })
       return
     } else {
-      res.status(204).send({ 
-        message: "No user logged in" 
+      res.status(204).send({
+        message: "No user logged in"
       })
     }
   },

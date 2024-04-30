@@ -91,6 +91,42 @@ io.on('connection', async (socket) => {
       socket.emit('room data', {data: foundGame})
     })
 
+    socket.on('dice roll', async (body) => {
+        console.log('body', body)
+        const foundGame = await findGame(body)
+        const foundUser = await findPlayer(body.playerId)
+
+        // console.log('foundUser', foundUser)
+        // console.log('dice', body.dice)
+
+        foundUser.one = body.dice['1']
+        foundUser.two = body.dice['2']
+        foundUser.three = body.dice['3']
+        foundUser.four = body.dice['4']
+        foundUser.five = body.dice['5']
+        foundUser.six = body.dice['6']
+        foundGame.rollCount += 1
+
+        // console.log('foundUser', foundUser)
+
+        await foundUser.save()
+        await foundGame.save()
+
+        const newFoundGame = await findGame(body)
+
+        // console.log('found game', newFoundGame)
+        // console.log(foundUser)
+
+
+        if(newFoundGame.rollCount === newFoundGame.players.length){
+            io.emit('all roll data', {
+                message: 'all rolls complete',
+                data: newFoundGame
+            })
+        }
+
+    })
+
     socket.on('place bet', async (body) => {
       const gameData = await placeBet(body)
 
@@ -108,7 +144,7 @@ io.engine.on('connection_error', (err) => {
 })
 
 // ACCOUNT ENDPOINTS
-const { register, login, logout, sessionCheck } = userFunctions
+const { register, login, logout, findPlayer, sessionCheck } = userFunctions
 app.post('/api/register', register)
 app.post('/api/login', login)
 app.get('/api/logout', logout)
