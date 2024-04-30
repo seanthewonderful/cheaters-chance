@@ -20,13 +20,11 @@ const Lobby = () => {
 
   // figure out if user is host by matching host.userId to user.userId
   const figureIfHost = () => {
-    if (user) {
-      if (user.userId === gameData.hostId) {
-        setAmHost(true)
-        return
-      }
+    if (user && user.userId === gameData.hostId) {
+      setAmHost(true)
+    } else {
+      setAmHost(false)
     }
-    setAmHost(false)
   }
 
   const startGame = () => {

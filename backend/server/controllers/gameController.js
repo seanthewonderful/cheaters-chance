@@ -9,8 +9,9 @@ import {
 
 
 const gameFunctions = {
+
   newGame: async (body) => {
-    // console.log('new game body', body)
+
     let {
       name,
       locked,
@@ -19,6 +20,8 @@ const gameFunctions = {
       startingDice,
       userId
     } = body
+
+    name = name.trim()
 
     // Checks to see if game name already exists
     const gameCheck = await Game.findOne({

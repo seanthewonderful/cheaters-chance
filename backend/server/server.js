@@ -68,21 +68,17 @@ io.on('connection', async (socket) => {
     })
 
     socket.on('host game', async (body) => {
-        console.log('host game hit')
 
-        if(rooms[body.name]){
-            console.log('room exists')
-        }
         let hostGameData = await newGame(body)
 
         if(hostGameData.game){
-            rooms[hostGameData.game.name] = body.password
+          rooms[hostGameData.game.name] = body.password
 
-            socket.join(hostGameData.game.name)
+          socket.join(hostGameData.game.name)
 
-            socket.emit('host game data', hostGameData)
+          socket.emit('host game data', hostGameData)
         } else {
-            socket.emit('game failure', {message: hostGameData.message})
+          socket.emit('game failure', { message: hostGameData.message })
         }
     })
 
