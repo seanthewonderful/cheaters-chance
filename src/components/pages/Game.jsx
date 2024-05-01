@@ -57,10 +57,7 @@ const Game = () => {
     })
 
     // unmounting function firing on mount - need to investigate 🔎
-    return () => {
-      console.log("CLEANUP FUNCTION")
-      socket.emit('player disconnect', { playerId: self.playerId })
-    }
+    
     
   }, [])
 
@@ -84,9 +81,9 @@ const Game = () => {
   }
 
 
-
   return (
-    <div id='game-div'>
+    <div id='game-div'>In-Game
+
       <section>
         <h3>Current Bet</h3>
         <p>Dice Count: {gameData.currentCount}</p>
@@ -126,6 +123,7 @@ const Game = () => {
       <section>
         <Dice turn={gameData.turn} self={self}/>
       </section>
+
     </div>
   )
 }

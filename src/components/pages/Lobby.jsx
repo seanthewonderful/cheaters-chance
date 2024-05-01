@@ -6,11 +6,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import socket from '../../functions/socket.js'
 import { useDispatch, useSelector } from 'react-redux'
+import Game from './Game.jsx'
 
 const Lobby = () => {
 
   const [gameData, setGameData] = useState({})
   const [amHost, setAmHost] = useState(false)
+  const [inGame, setInGame] = useState(false)
 
   const user = useSelector(state => state.user)
   const { gameId } = useParams()
@@ -49,8 +51,15 @@ const Lobby = () => {
         type: 'SET_GAME',
         payload: res
       })
-      navigate(`/scuttlebutt/game`)
+      // navigate(`/scuttlebutt/game`)
+      setInGame(true)
     })
+    
+    return () => {
+      console.log("CLEANUP FUNCTION")
+      socket.emit('player disconnect', { playerId: self.playerId })
+      // need to get user's playerId here now
+    }
 
   }, [])
 
@@ -67,24 +76,26 @@ const Lobby = () => {
     :
     []
 
-  return (
-    <div>Lobby
+  return inGame ? (
+      <Game />
+    ) : (
+      <div>Lobby
 
-      <section id='host-start-section'>
-        {amHost && (
-          <button
-            id='host-start-btn'
-            onClick={startGame}
-            >
-              Start Game
-          </button>
-        )}
-      </section>
+        <section id='host-start-section'>
+          {amHost && (
+            <button
+              id='host-start-btn'
+              onClick={startGame}
+              >
+                Start Game
+            </button>
+          )}
+        </section>
 
-      <section>
-        {allPlayers}
-      </section>
-    </div>
+        <section>
+          {allPlayers}
+        </section>
+      </div>
   )
 }
 
