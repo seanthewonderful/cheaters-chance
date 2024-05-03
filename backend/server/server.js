@@ -58,11 +58,14 @@ io.on('connection', async (socket) => {
 
         let joinedData = await joinGame(body)
 
-        socket.join(joinedData.foundGame.name)
+        socket.join(joinedData.foundGame.gameId)
 
         socket.emit('join game hit', {data: joinedData})
 
-        io.to(joinedData.foundGame.name).emit('new player', {data: joinedData, message: 'new player joined'})
+        io.to(joinedData.foundGame.gameId).emit('new player', {
+          data: joinedData, 
+          message: 'new player joined'
+        })
     })
 
     socket.on('host game', async (body) => {
@@ -72,7 +75,7 @@ io.on('connection', async (socket) => {
         if(hostGameData.game){
           rooms[hostGameData.game.name] = body.password
 
-          socket.join(hostGameData.game.name)
+          socket.join(hostGameData.game.gameId)
 
           socket.emit('host game data', hostGameData)
         } else {
@@ -82,7 +85,7 @@ io.on('connection', async (socket) => {
 
     socket.on('start game', async (body) => {
       const gameData = await startGame(body.gameId)
-      io.to(gameData.name).emit('game initialized', gameData)
+      io.to(gameData.gameId).emit('game initialized', gameData)
     })
 
     socket.on('get room', async (body) => {
@@ -95,9 +98,6 @@ io.on('connection', async (socket) => {
         console.log('body', body)
         const foundGame = await findGame(body)
         const foundUser = await findPlayer(body.playerId)
-
-        // console.log('foundUser', foundUser)
-        // console.log('dice', body.dice)
 
         foundUser.one = body.dice['1']
         foundUser.two = body.dice['2']
@@ -114,10 +114,6 @@ io.on('connection', async (socket) => {
 
         const newFoundGame = await findGame(body)
 
-        // console.log('found game', newFoundGame)
-        // console.log(foundUser)
-
-
         if(newFoundGame.rollCount === newFoundGame.players.length){
             io.emit('all roll data', {
                 message: 'all rolls complete',
@@ -130,11 +126,22 @@ io.on('connection', async (socket) => {
     socket.on('place bet', async (body) => {
       const gameData = await placeBet(body)
 
-      io.to(gameData.name).emit('bet placed', { gameData })
+      io.to(gameData.gameId).emit('bet placed', { gameData })
     })
 
     socket.on('player disconnect', async (body) => {
       console.log("PLAYER DISCONNECT -- ", body)
+
+      const gameData = await removePlayerFromGame(body)
+
+      socket.leave(body.gameId)
+
+      const player = await getPlayerById(body.playerId)
+      io.to(body.gameId).emit('player disconnected', { 
+        message: 'player disconnected', 
+        playerName: player.user.username,
+        gameData: gameData
+      })
     })
 
 })
@@ -152,7 +159,17 @@ app.get('/api/sessionCheck', sessionCheck)
 
 
 // GAME ENDPOINTS
-const { newGame, allGames, joinGame, startGame, findGame, placeBet } = gameFunctions
+const { 
+  newGame, 
+  allGames, 
+  joinGame, 
+  startGame, 
+  findGame, 
+  placeBet,
+  diceRoll,
+  getPlayerById,
+  removePlayerFromGame
+} = gameFunctions
 app.post('/api/newGame', newGame)
 app.get('/api/allGames', allGames)
 app.post('/api/joinGame', joinGame)

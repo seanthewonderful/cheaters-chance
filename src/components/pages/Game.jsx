@@ -56,7 +56,12 @@ const Game = () => {
     socket.on('bet placed', (res) => {
       setGameData(res.gameData)
     })
-    
+
+    socket.on('player disconnected', (res) => {
+      console.log(res.message, res.playerName)
+      setGameData(res.gameData)
+    })
+
   }, [])
   
   useEffect(() => {
@@ -67,7 +72,10 @@ const Game = () => {
     console.log("INITIAL RENDER")
 
     const handleUnload = () => {
-      socket.emit('player disconnect', { playerId: self.playerId });
+      socket.emit('player disconnect', { 
+        playerId: self.playerId,
+        gameId: gameData.gameId
+      });
     };
 
     window.addEventListener('beforeunload', handleUnload);

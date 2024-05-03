@@ -198,7 +198,7 @@ const gameFunctions = {
 
   findGame: async (body) => {
 
-    const game = await Game.findOne({
+    return await Game.findOne({
       where: {
         gameId: body.gameId
       },
@@ -209,8 +209,6 @@ const gameFunctions = {
         }
       }
     })
-
-    return game
   },
 
   placeBet: async (body) => {
@@ -240,6 +238,24 @@ const gameFunctions = {
   },
   diceRoll: async (body) => {
 
+  },
+
+  getPlayerById: async (playerId) => {
+    return await Player.findByPk(playerId, { include: User})
+  },
+
+  removePlayerFromGame: async (body) => {
+    let game = await Game.findByPk(body.gameId)
+    await game.removePlayer(body.playerId)
+    game = await Game.findByPk(body.gameId, {
+      include: {
+        model: Player,
+        include: {
+          model: User
+        }
+      }
+    })
+    return game
   }
 }
 
