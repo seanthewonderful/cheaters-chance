@@ -118,19 +118,31 @@ const gameFunctions = {
 
     if (!body.userId) {
       return {
+        status: 401,
         message: "You must be logged in"
       }
     }
 
     let foundGame = await Game.findOne({
       where: {
-        name: body.name,
+        gameId: body.gameId,
         active: true
       },
       include: {
-        model: Player
+        model: Player, 
+        include: {
+          model: User
+        }
       }
     })
+
+    // Check if user is already in game
+    if (foundGame.players.filter(player => player.user.userId === body.userId).length > 0) {
+      return {
+        status: 403,
+        message: 'User already in game'
+      }
+    }
 
     // Checks if the passwords match
     if (foundGame) {
@@ -151,7 +163,7 @@ const gameFunctions = {
 
         foundGame = await Game.findOne({
           where: {
-            name: body.name,
+            gameId: body.gameId,
             active: true
           },
           include: {
@@ -163,6 +175,7 @@ const gameFunctions = {
         })
 
         return {
+          status: 200,
           message: 'Game joined',
           player,
           foundGame
@@ -172,6 +185,7 @@ const gameFunctions = {
         console.log('password does not match')
 
         return {
+          status: 403,
           message: 'Password incorrect',
         }
       }

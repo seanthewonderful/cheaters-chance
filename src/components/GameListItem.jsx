@@ -15,7 +15,6 @@ const GameListItem = ({game}) => {
     toggleModal()
   }
 
-
   return (
     <>
       <div className='game-list-item' key={game.gameId} onClick={handleClick}>

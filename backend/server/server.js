@@ -49,23 +49,28 @@ io.on('connection', async (socket) => {
     console.log('socket connected')
 
     socket.on('greet', () => {
-        console.log('greet hit')
+      console.log('greet hit')
 
-        socket.broadcast.emit('goodbye', {data: 'sup boiiii'})
+      socket.broadcast.emit('goodbye', {data: 'sup boiiii'})
     })
 
     socket.on('join game', async (body) => {
 
-        let joinedData = await joinGame(body)
+      let joinedData = await joinGame(body)
 
-        socket.join(joinedData.foundGame.gameId)
+      if (joinedData.status !== 200) {
+        socket.emit('join failure', { message: joinedData.message })
+        return
+      }
 
-        socket.emit('join game hit', {data: joinedData})
+      socket.join(joinedData.foundGame.gameId)
 
-        io.to(joinedData.foundGame.gameId).emit('new player', {
-          data: joinedData, 
-          message: 'new player joined'
-        })
+      socket.emit('join game hit', {data: joinedData})
+
+      io.to(joinedData.foundGame.gameId).emit('new player', {
+        data: joinedData, 
+        message: 'new player joined'
+      })
     })
 
     socket.on('host game', async (body) => {
@@ -90,12 +95,10 @@ io.on('connection', async (socket) => {
 
     socket.on('get room', async (body) => {
       const foundGame = await findGame(body)
-
       socket.emit('room data', {data: foundGame})
     })
 
     socket.on('dice roll', async (body) => {
-        console.log('body', body)
         const foundGame = await findGame(body)
         const foundUser = await findPlayer(body.playerId)
 

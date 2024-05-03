@@ -26,13 +26,27 @@ const JoinModal = ({ game, toggleModal }) => {
       navigate(`/scuttlebutt/lobby/${res.data.foundGame.gameId}`)
     })
 
+    socket.on('join failure', (res) => {
+      console.log('join failure hit')
+      alert(res.message)
+      toggleModal()
+    })
+
   }, [socket])
 
   const onSubmit = () => {
     if (game.password !== 'default') {
-      socket.emit('join game', { name: game.name, password: password, userId })
+      socket.emit('join game', { 
+        gameId: game.gameId, 
+        password: password, 
+        userId: userId 
+      })
     } else {
-      socket.emit('join game', { name: game.name, password: 'default', userId })
+      socket.emit('join game', { 
+        gameId: game.gameId, 
+        password: 'default', 
+        userId: userId 
+      })
     }
   }
 
