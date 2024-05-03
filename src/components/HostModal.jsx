@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios';
 import toTitleCase from '../functions/toTitleCase.js'
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import socket from '../functions/socket.js'
 
@@ -15,10 +15,16 @@ const HostModal = ({ isOpen, closeModal, user }) => {
   const [uniqueName, setUniqueName] = useState(true)
   const userId = useSelector(state => state.user.userId)
 
+  const dispatch = useDispatch()
+
   useEffect(() => {
     socket.on('host game data', (data) => {
-      console.log('host game data full', data)
-      navigate(`/scuttlebutt/lobby/${data.game.gameId}`)
+      console.log('host game data', data)
+      dispatch({
+        type: 'SET_GAME',
+        payload: data.gameData
+      })
+      navigate(`/scuttlebutt/lobby/${data.gameData.gameId}`)
     })
 
     socket.on('game failure', (data) => {

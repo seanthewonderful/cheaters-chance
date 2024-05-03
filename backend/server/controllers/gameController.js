@@ -24,14 +24,13 @@ const gameFunctions = {
     name = name.trim()
 
     // Checks to see if game name already exists
-    const gameCheck = await Game.findOne({
-      where: {
-        name: name,
-        active: true
-      }
-    })
-
-    if (gameCheck) {
+    if (await Game.findOne({
+          where: {
+            name: name,
+            active: true
+          }
+        })
+      ) {
       return {
         message: 'Name already in use'
       }
@@ -40,7 +39,7 @@ const gameFunctions = {
     name = name.replace("'", "''")
 
     // Creates new game
-    const game = await Game.create({
+    let game = await Game.create({
       name,
       password,
       locked,
@@ -61,7 +60,7 @@ const gameFunctions = {
         turn: 0
       })
 
-      let foundGame = await Game.findOne({
+      game = await Game.findOne({
         where: {
           name: game.name,
           active: true
@@ -77,7 +76,7 @@ const gameFunctions = {
 
       return {
         message: 'Game created',
-        game: foundGame
+        game: game
       }
     }
 
@@ -149,7 +148,6 @@ const gameFunctions = {
 
       // if the provided password matches game's password AND provided password is NOT 'default'
       if (foundGame.password === body.password) {
-        console.log('password hit')
 
         const user = await User.findByPk(body.userId)
         user.inGame = true
@@ -261,6 +259,7 @@ const gameFunctions = {
   removePlayerFromGame: async (body) => {
     let game = await Game.findByPk(body.gameId)
     await game.removePlayer(body.playerId)
+
     game = await Game.findByPk(body.gameId, {
       include: {
         model: Player,

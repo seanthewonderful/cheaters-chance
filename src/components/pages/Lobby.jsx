@@ -1,21 +1,18 @@
 import { useEffect, useState } from 'react'
-import Player from '../Player'
-import Opponent from '../Opponent'
-import Dice from '../Dice'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
 import socket from '../../functions/socket.js'
-import { useDispatch, useSelector } from 'react-redux'
 import Game from './Game.jsx'
 
 const Lobby = () => {
 
-  const [gameData, setGameData] = useState({})
+  const user = useSelector(state => state.user)
+  const initialGameData = useSelector(state => state.game)
+
+  const [gameData, setGameData] = useState(initialGameData)
   const [amHost, setAmHost] = useState(false)
   const [inGame, setInGame] = useState(false)
-
-  const user = useSelector(state => state.user)
-  const self = gameData.players ? gameData.players.filter(player => player.user.userId === user.userId)[0] : {}
 
   const { gameId } = useParams()
 
@@ -36,14 +33,18 @@ const Lobby = () => {
   }
 
   useEffect(() => {
-    socket.emit('get room', { gameId })
+    // socket.emit('get room', { gameId })
 
-    socket.on('room data', (res) => {
-      setGameData(res.data)
-    })
+    // socket.on('room data', (res) => {
+    //   setGameData(res.data)
+    // })
 
     socket.on('new player', (res) => {
       setGameData(res.data.foundGame)
+      dispatch({
+        type: 'SET_GAME',
+        payload: res.data.foundGame
+      })
     })
 
     socket.on('game initialized', (res) => {
@@ -52,8 +53,8 @@ const Lobby = () => {
         type: 'SET_GAME',
         payload: res
       })
-      navigate(`/game`)
-      // setInGame(true)
+      // navigate(`/game`)
+      setInGame(true)
     })
 
   }, [])
@@ -70,6 +71,7 @@ const Lobby = () => {
     })
     :
     []
+
 
   return inGame ? (
       <Game />
