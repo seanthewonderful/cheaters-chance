@@ -48,6 +48,7 @@ const Register = ({ loginClick }) => {
         <input
           type="text"
           name="username"
+          autoFocus
           onChange={e => setUsername(e.target.value)}
           autoComplete='off'
         />

@@ -4,12 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import AuthModal from '../AuthModal.jsx'
 import sessionCheck from '../../functions/sessionCheck.js'
 import axios from 'axios'
-import Dice from '../Dice.jsx'
-
-// import io from 'socket.io-client'
-
-// const URL = 'http://localhost:2319'
-// const socket = io.connect(URL)
 
 import socket from '../../functions/socket.js'
 

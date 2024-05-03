@@ -3,7 +3,9 @@ import Register from "./auth/Register";
 
 const AuthModal = ({ isOpen, onClose, register, loginClick, registerClick }) => {
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null
+  }
 
   return (
     <div className="modal">
