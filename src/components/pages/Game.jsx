@@ -9,6 +9,7 @@ import Dice from '../Dice.jsx'
 const Game = () => {
 
   const navigate = useNavigate()
+  const [isMounted, setIsMounted] = useState(false)
 
   const user = useSelector(state => state.user)
   const initialGameData = useSelector(state => state.game)
@@ -55,11 +56,31 @@ const Game = () => {
     socket.on('bet placed', (res) => {
       setGameData(res.gameData)
     })
-
-    // unmounting function firing on mount - need to investigate 🔎
-    
     
   }, [])
+  
+  useEffect(() => {
+    setTimeout(() => {
+      setIsMounted(true)
+    }, 1000)
+
+    console.log("INITIAL RENDER")
+
+    const handleUnload = () => {
+      socket.emit('player disconnect', { playerId: self.playerId });
+    };
+
+    window.addEventListener('beforeunload', handleUnload);
+
+    return () => {
+      if (isMounted) {
+        console.log("CLEANUP FUNCTION")
+        handleUnload()
+      }
+    }
+    
+  }, [isMounted])
+
 
   const liar = () => {
     console.log(gameData)

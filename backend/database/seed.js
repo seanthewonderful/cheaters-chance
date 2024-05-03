@@ -8,68 +8,85 @@ await db.sync({ force: true });
 
 console.log("Seeding database ...");
 
-const fellowship = [
-    {
-        username: 'misterBaggins',
-        password: 'nineFingers',
-        imgUrl: 'img.jpg'
-    },
-    {
-        username: 'samwise',
-        password: 'theBrave',
-        imgUrl: 'img.jpg'
-    },
-    {
-        username: 'meriadoc',
-        password: 'saltedPork',
-        imgUrl: 'img.jpg'
-    },
-    {
-        username: 'thePipster',
-        password: 'gemBoiii',
-        imgUrl: 'img.jpg'
-    },
-    {
-        username: 'grayGoose',
-        password: 'pippinSux',
-        imgUrl: 'img.jpg'
-    },
+const saz = [
+  {
+    username: 's',
+    password: 's'
+  },
+  {
+    username: 'a',
+    password: 'a'
+  },
+  {
+    username: 'z',
+    password: 'z'
+  }
 ]
 
-let userAccounts = []
+await User.bulkCreate(saz)
 
-// create 5 user accounts
-for (let i = 0; i < fellowship.length; i++) {
+// const fellowship = [
+//     {
+//         username: 'misterBaggins',
+//         password: 'nineFingers',
+//         imgUrl: 'img.jpg'
+//     },
+//     {
+//         username: 'samwise',
+//         password: 'theBrave',
+//         imgUrl: 'img.jpg'
+//     },
+//     {
+//         username: 'meriadoc',
+//         password: 'saltedPork',
+//         imgUrl: 'img.jpg'
+//     },
+//     {
+//         username: 'thePipster',
+//         password: 'gemBoiii',
+//         imgUrl: 'img.jpg'
+//     },
+//     {
+//         username: 'grayGoose',
+//         password: 'pippinSux',
+//         imgUrl: 'img.jpg'
+//     },
+// ]
 
-    // create 5 user accounts
-    let newUser = await User.create(fellowship[i])
-    userAccounts.push(newUser)
+// let userAccounts = []
 
-    // dynamically setup game params based on userId
-    let password = newUser.userId % 2 === 0 ? 'default' : 'asdf'
-    let locked = newUser.userId % 2 === 0 ? false : true
-    let limit = newUser.userId % 2 === 0 ? 4 : 6
-    let dice = newUser.userId % 2 === 0 ? 4 : 6
+// // create 5 user accounts
+// for (let i = 0; i < fellowship.length; i++) {
 
-    let newGame = await Game.create(
-        {
-            name: `${newUser.username}'s Lobby`,
-            locked: locked,
-            password: password,
-            active: true,
-            playerLimit: limit,
-            startingDice: dice,
-            hostId: newUser.userId
-        }
-    )
+//     // create 5 user accounts
+//     let newUser = await User.create(fellowship[i])
+//     userAccounts.push(newUser)
 
-    // add host to new game
-    await newGame.createPlayer({
-        userId: newUser.userId,
-        dice: dice,
-        turn: 0
-    })
-}
+//     // dynamically setup game params based on userId
+//     let password = newUser.userId % 2 === 0 ? 'default' : 'asdf'
+//     let locked = newUser.userId % 2 === 0 ? false : true
+//     let limit = newUser.userId % 2 === 0 ? 4 : 6
+//     let dice = newUser.userId % 2 === 0 ? 4 : 6
+
+//     let newGame = await Game.create(
+//         {
+//             name: `${newUser.username}'s Lobby`,
+//             locked: locked,
+//             password: password,
+//             active: true,
+//             playerLimit: limit,
+//             startingDice: dice,
+//             hostId: newUser.userId
+//         }
+//     )
+
+//     // add host to new game
+//     await newGame.createPlayer({
+//         userId: newUser.userId,
+//         dice: dice,
+//         turn: 0
+//     })
+// }
 
 
 // add each user to 2 random games

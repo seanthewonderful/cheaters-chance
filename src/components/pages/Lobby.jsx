@@ -15,6 +15,8 @@ const Lobby = () => {
   const [inGame, setInGame] = useState(false)
 
   const user = useSelector(state => state.user)
+  const self = gameData.players ? gameData.players.filter(player => player.user.userId === user.userId)[0] : {}
+
   const { gameId } = useParams()
 
   const navigate = useNavigate()
@@ -37,7 +39,6 @@ const Lobby = () => {
     socket.emit('get room', { gameId })
 
     socket.on('room data', (res) => {
-      console.log('res')
       setGameData(res.data)
     })
 
@@ -51,15 +52,9 @@ const Lobby = () => {
         type: 'SET_GAME',
         payload: res
       })
-      // navigate(`/scuttlebutt/game`)
-      setInGame(true)
+      navigate(`/game`)
+      // setInGame(true)
     })
-    
-    return () => {
-      console.log("CLEANUP FUNCTION")
-      socket.emit('player disconnect', { playerId: self.playerId })
-      // need to get user's playerId here now
-    }
 
   }, [])
 

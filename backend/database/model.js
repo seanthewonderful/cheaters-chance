@@ -31,12 +31,14 @@ User.init({
   imgUrl: {
     type: DataTypes.STRING(500),
     allowNull: false,
+    defaultValue: "img.jpg"
   },
   inGame: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   }
-}, {
+}, 
+{
   modelName: "user",
   sequelize: db,
   defaultScope: {
