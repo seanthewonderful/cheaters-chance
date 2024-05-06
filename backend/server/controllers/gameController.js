@@ -253,7 +253,7 @@ const gameFunctions = {
   },
 
   getPlayerById: async (playerId) => {
-    return await Player.findByPk(playerId, { include: User})
+    return await Player.findByPk(playerId, { include: User })
   },
 
   removePlayerFromGame: async (body) => {

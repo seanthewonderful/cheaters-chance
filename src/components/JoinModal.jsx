@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios'
 
 import socket from '../functions/socket.js'
@@ -9,6 +9,7 @@ import socket from '../functions/socket.js'
 const JoinModal = ({ game, toggleModal }) => {
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const [password, setPassword] = useState('')
 
@@ -23,6 +24,10 @@ const JoinModal = ({ game, toggleModal }) => {
 
     socket.on('join game hit', (res) => {
       console.log("FOUND GAME ID: ", res.data.foundGame.gameId)
+      dispatch({
+        type: 'SET_GAME',
+        payload: res.data.foundGame
+      })
       navigate(`/scuttlebutt/lobby/${res.data.foundGame.gameId}`)
     })
 

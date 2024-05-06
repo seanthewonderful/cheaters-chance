@@ -13,11 +13,15 @@ const Lobby = () => {
   const [gameData, setGameData] = useState(initialGameData)
   const [amHost, setAmHost] = useState(false)
   const [inGame, setInGame] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
 
   const { gameId } = useParams()
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  // Figure out who user is in context of the game
+  const self = gameData.players.filter(player => player.user.userId === user.userId)[0]
 
   // figure out if user is host by matching host.userId to user.userId
   const figureIfHost = () => {
@@ -57,11 +61,45 @@ const Lobby = () => {
       setInGame(true)
     })
 
+    socket.on('player disconnected', (res) => {
+      console.log(res.message, res.playerName)
+      dispatch({
+        type: 'SET_GAME',
+        payload: res.gameData
+      })
+      setGameData(res.gameData)
+    })
+
   }, [])
 
   useEffect(() => {
     figureIfHost()
   }, [gameData])
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsMounted(true)
+    }, 1)
+
+    console.log("INITIAL RENDER")
+
+    const handleUnload = () => {
+      socket.emit('player disconnect', { 
+        playerId: self.playerId,
+        gameId: gameData.gameId
+      });
+    };
+
+    window.addEventListener('beforeunload', handleUnload);
+
+    return () => {
+      if (isMounted) {
+        console.log("CLEANUP FUNCTION")
+        handleUnload()
+      }
+    }
+    
+  }, [isMounted])
 
   const allPlayers = gameData.players ? gameData.players.map((el, i) => {
     return <section key={i}>

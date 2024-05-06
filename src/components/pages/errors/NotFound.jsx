@@ -27,6 +27,7 @@ const NotFound = () => {
         />
       </div>
 
+      <button onClick={() => navigate('/scuttlebutt/profile') }>Profile</button>
       <button onClick={logoutClick}>Logout</button>
 
     </div>

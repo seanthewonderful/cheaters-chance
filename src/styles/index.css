@@ -117,7 +117,7 @@ form {
   max-width: fit-content;
 }
 #not-found-img {
-  max-width: 100%;
+  max-width: 50%;
 }
 #menu-icon {
   transition: 0.3s ease-in-out;

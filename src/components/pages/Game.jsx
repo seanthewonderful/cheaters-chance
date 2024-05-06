@@ -57,37 +57,37 @@ const Game = () => {
       setGameData(res.gameData)
     })
 
-    socket.on('player disconnected', (res) => {
-      console.log(res.message, res.playerName)
-      setGameData(res.gameData)
-    })
+    // socket.on('player disconnected', (res) => {
+    //   console.log(res.message, res.playerName)
+    //   setGameData(res.gameData)
+    // })
 
   }, [])
   
-  useEffect(() => {
-    setTimeout(() => {
-      setIsMounted(true)
-    }, 1000)
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsMounted(true)
+  //   }, 1000)
 
-    console.log("INITIAL RENDER")
+  //   console.log("INITIAL RENDER")
 
-    const handleUnload = () => {
-      socket.emit('player disconnect', { 
-        playerId: self.playerId,
-        gameId: gameData.gameId
-      });
-    };
+  //   const handleUnload = () => {
+  //     socket.emit('player disconnect', { 
+  //       playerId: self.playerId,
+  //       gameId: gameData.gameId
+  //     });
+  //   };
 
-    window.addEventListener('beforeunload', handleUnload);
+  //   window.addEventListener('beforeunload', handleUnload);
 
-    return () => {
-      if (isMounted) {
-        console.log("CLEANUP FUNCTION")
-        handleUnload()
-      }
-    }
+  //   return () => {
+  //     if (isMounted) {
+  //       console.log("CLEANUP FUNCTION")
+  //       handleUnload()
+  //     }
+  //   }
     
-  }, [isMounted])
+  // }, [isMounted])
 
 
   const liar = () => {
