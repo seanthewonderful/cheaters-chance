@@ -5,6 +5,7 @@ import { useLoaderData } from 'react-router-dom'
 const Join = () => {
 
   const games = useLoaderData()
+  console.log(games)
 
   const gameMap = games.map(game => {
     if (game.active) {

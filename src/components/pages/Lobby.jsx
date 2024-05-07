@@ -1,64 +1,102 @@
 import { useEffect, useState } from 'react'
-import Player from '../Player'
-import Opponent from '../Opponent'
-import Dice from '../Dice'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
 import socket from '../../functions/socket.js'
-import { useDispatch, useSelector } from 'react-redux'
+// import Game from './Game.jsx'
 
 const Lobby = () => {
 
-  const [gameData, setGameData] = useState({})
-  const [amHost, setAmHost] = useState(false)
-
   const user = useSelector(state => state.user)
-  const { gameId } = useParams()
+  const initialGameData = useSelector(state => state.game)
+
+  const [gameData, setGameData] = useState(initialGameData)
+  const [amHost, setAmHost] = useState(false)
+  const [lobbyStatus, setLobbyStatus] = useState('initializing')
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
+  // Figure out who user is in context of the game
+  const self = gameData.players.filter(player => player.user.userId === user.userId)[0]
+
   // figure out if user is host by matching host.userId to user.userId
   const figureIfHost = () => {
-    if (user) {
-      if (user.userId === gameData.hostId) {
-        setAmHost(true)
-        return
-      }
+    if (user && user.userId === gameData.hostId) {
+      setAmHost(true)
+    } else {
+      setAmHost(false)
     }
-    setAmHost(false)
   }
 
+  const handleUnload = () => {
+    socket.emit('player disconnect', { 
+      playerId: self.playerId,
+      gameId: gameData.gameId
+    });
+  };
+
   const startGame = () => {
+    setLobbyStatus('startingGame')
+    window.removeEventListener('beforeunload', handleUnload)
     socket.emit('start game', gameData)
   }
 
   useEffect(() => {
-    socket.emit('get room', { gameId })
-
-    socket.on('room data', (res) => {
-      console.log('res')
-      setGameData(res.data)
-    })
 
     socket.on('new player', (res) => {
       setGameData(res.data.foundGame)
+      dispatch({
+        type: 'SET_GAME',
+        payload: res.data.foundGame
+      })
     })
 
     socket.on('game initialized', (res) => {
       console.log('game initialized hit', res)
       dispatch({
         type: 'SET_GAME',
-        payload: res
+        payload: res.gameData
       })
-      navigate(`/scuttlebutt/game`)
+      navigate(`/game`)
+      // setInGame(true)
+    })
+
+    socket.on('player disconnected', (res) => {
+      console.log("LOBBY ",res.message, res.playerName, res.gameData)
+      dispatch({
+        type: 'SET_GAME',
+        payload: res.gameData
+      })
+      setGameData(res.gameData)
     })
 
   }, [])
 
+  // Each time gameData changes, figure out if user is host
   useEffect(() => {
     figureIfHost()
   }, [gameData])
+
+  // If user navigates away from page, emit player disconnect
+  useEffect(() => {
+
+    setLobbyStatus('waiting')
+
+    console.log("LOBBY INITIAL RENDER")
+
+    window.addEventListener('beforeunload', handleUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload)
+
+      if (lobbyStatus === 'waiting') {
+        console.log("LOBBY CLEANUP FUNCTION")
+        handleUnload()
+      }
+    }
+    
+  }, [])
 
   const allPlayers = gameData.players ? gameData.players.map((el, i) => {
     return <section key={i}>
@@ -69,24 +107,25 @@ const Lobby = () => {
     :
     []
 
+
   return (
-    <div>Lobby
+      <div>Lobby
 
-      <section id='host-start-section'>
-        {amHost && (
-          <button
-            id='host-start-btn'
-            onClick={startGame}
-            >
-              Start Game
-          </button>
-        )}
-      </section>
+        <section id='host-start-section'>
+          {amHost && (
+            <button
+              id='host-start-btn'
+              onClick={startGame}
+              >
+                Start Game
+            </button>
+          )}
+        </section>
 
-      <section>
-        {allPlayers}
-      </section>
-    </div>
+        <section>
+          {allPlayers}
+        </section>
+      </div>
   )
 }
 

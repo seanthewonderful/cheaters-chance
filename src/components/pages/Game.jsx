@@ -1,30 +1,33 @@
 import Player from '../Player'
 import Opponent from '../Opponent'
-import socket from '../../functions/socket'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Dice from '../Dice.jsx'
 
+import socket from '../../functions/socket'
+
 const Game = () => {
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const user = useSelector(state => state.user)
   const initialGameData = useSelector(state => state.game)
 
   const [gameData, setGameData] = useState(initialGameData)
-
+  const [isMounted, setIsMounted] = useState(false)
   const [bet, setBet] = useState({
     count: gameData.currentCount,
     value: gameData.currentValue === 0 ? 1 : gameData.currentValue
   })
 
   const self = gameData.players.filter(player => player.user.userId === user.userId)[0]
+  const [myTurn, setMyTurn] = useState(gameData.players[gameData.turn].user.userId === self.user.userId)
 
   const opponents = gameData.players
     .filter(player => player.user.userId !== user.userId)
-    .map(opponent => <Opponent player={opponent} key={user.userId}/>)
+    .map(opponent => <Opponent key={opponent.user.userId} player={opponent} />)
 
   const placeBet = () => {
 
@@ -56,13 +59,48 @@ const Game = () => {
       setGameData(res.gameData)
     })
 
-    // unmounting function firing on mount - need to investigate 🔎
-    return () => {
-      console.log("CLEANUP FUNCTION")
-      socket.emit('player disconnect', { playerId: self.playerId })
-    }
+    socket.on('player disconnected', (res) => {
+      console.log('GAME ', res.message, res.playerName, res.gameData)
+      dispatch({
+        type: 'SET_GAME',
+        payload: res.gameData
+      })
+      setGameData(res.gameData)
+    })
 
   }, [])
+
+  useEffect(() => {
+    // Figure out if it's my turn after new gameData
+    setMyTurn(gameData.players[gameData.turn].user.userId === self.user.userId)
+  }, [gameData])
+  
+  useEffect(() => {
+    setTimeout(() => {
+      setIsMounted(true)
+    }, 1000)
+
+    console.log("GAME INITIAL RENDER")
+
+    const handleUnload = () => {
+      socket.emit('player disconnect', { 
+        playerId: self.playerId,
+        gameId: gameData.gameId
+      });
+    };
+
+    window.addEventListener('beforeunload', handleUnload);
+
+    return () => {
+      if (isMounted) {
+        window.removeEventListener('beforeunload', handleUnload);
+        console.log("GAME CLEANUP FUNCTION")
+        handleUnload()
+      }
+    }
+    
+  }, [isMounted])
+
 
   const liar = () => {
     console.log(gameData)
@@ -84,9 +122,9 @@ const Game = () => {
   }
 
 
-
   return (
-    <div id='game-div'>
+    <div id='game-div'>In-Game
+
       <section>
         <h3>Current Bet</h3>
         <p>Dice Count: {gameData.currentCount}</p>
@@ -98,7 +136,8 @@ const Game = () => {
       </section>
       <section>
         {<Player player={self} />}
-        {gameData.turn === self.turn ? (
+        {/* {gameData.turn === self.turn ? ( */}
+        {myTurn ? (
           <>
             <h3>Bet:</h3>
             Count:
@@ -126,6 +165,7 @@ const Game = () => {
       <section>
         <Dice turn={gameData.turn} self={self}/>
       </section>
+
     </div>
   )
 }

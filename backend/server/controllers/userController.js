@@ -80,14 +80,7 @@ const userFunctions = {
 
   findPlayer: async (playerId) => {
 
-    const player = await Player.findOne({
-      where: {
-        playerId: playerId
-      }
-    })
-
-    return player
-
+    return await Player.findByPk(playerId)
   },
 
   sessionCheck: async (req, res) => {

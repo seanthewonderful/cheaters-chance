@@ -18,7 +18,7 @@ const NavMenu = () => {
         >
           <img 
             id="menu-icon" 
-            className={`menu-icon ${!isOpen ? 'visible' : 'hidden'}`}
+            className={`menu-icon ${isOpen ? 'hidden' : 'visible'}`}
             src={hamburgerMenu} 
             alt="" 
             />
@@ -33,8 +33,8 @@ const NavMenu = () => {
         <div className={`menu-items ${isOpen? 'open' : 'closed'}`}>
           {/* Menu Items */}
             <NavLink 
-              to="/scuttlebutt/profile"
               className="menu-item" 
+              to="/scuttlebutt/profile"
               onClick={() => setIsOpen(false)}
               >
                 Profile
@@ -43,23 +43,23 @@ const NavMenu = () => {
             <NavLink 
               className="menu-item" 
               to="/scuttlebutt/join"
+              onClick={() => setIsOpen(false)}
               >
                 Join Game
               </NavLink>
       
             <NavLink 
               className="menu-item" 
-              to="/scuttlebutt/rules
-              "
+              to="/scuttlebutt/rules"
+              onClick={() => setIsOpen(false)}
               >
                 Rules
               </NavLink>   
 
             <NavLink 
               className="menu-item" 
-              to="/scuttlebutt/setti
-              n
-              gs"
+              to="/scuttlebutt/settings"
+              onClick={() => setIsOpen(false)}
               >
                 Settings
               </NavLink>     

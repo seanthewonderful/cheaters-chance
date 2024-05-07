@@ -31,12 +31,14 @@ User.init({
   imgUrl: {
     type: DataTypes.STRING(500),
     allowNull: false,
+    defaultValue: "img.jpg"
   },
   inGame: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   }
-}, {
+}, 
+{
   modelName: "user",
   sequelize: db,
   defaultScope: {
@@ -68,7 +70,6 @@ Game.init({
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   },
   locked: {
     type: DataTypes.BOOLEAN,
@@ -132,10 +133,10 @@ Player.init({
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  turn: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
+  // turn: {
+  //   type: DataTypes.INTEGER,
+  //   allowNull: false
+  // },
   one: {
     type: DataTypes.INTEGER,
     allowNull: false,

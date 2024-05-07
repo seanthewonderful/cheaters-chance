@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios';
 import toTitleCase from '../functions/toTitleCase.js'
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import socket from '../functions/socket.js'
 
@@ -12,14 +12,30 @@ const HostModal = ({ isOpen, closeModal, user }) => {
   const [playerLimit, setPlayerLimit] = useState(6)
   const [startingDice, setStartingDice] = useState(5)
   const [gamePassword, setGamePassword] = useState({ required: false, password: '' })
+  const [uniqueName, setUniqueName] = useState(true)
   const userId = useSelector(state => state.user.userId)
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     socket.on('host game data', (data) => {
-      console.log('host game data full', data)
-      navigate(`/scuttlebutt/lobby/${data.game.gameId}`)
+      console.log('host game data', data)
+      dispatch({
+        type: 'SET_GAME',
+        payload: data.gameData
+      })
+      navigate(`/scuttlebutt/lobby/${data.gameData.gameId}`)
+    })
+
+    socket.on('game failure', (data) => {
+      console.log(data.message)
+      setUniqueName(false)
     })
   }, [])
+
+  useEffect(() => {
+    setUniqueName(true)
+  }, [gameName])
 
   const navigate = useNavigate()
 
@@ -40,16 +56,20 @@ const HostModal = ({ isOpen, closeModal, user }) => {
     socket.emit('host game', body)
   }
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <div className='modal'>
-        <button onClick={closeModal}>Close</button>
-        <h1>Create a new game</h1>
 
-        <form onSubmit={createGame}>
+      <button onClick={closeModal}>Close</button>
+      <h1>Create a new game</h1>
+
+      <form onSubmit={createGame}>
 
         <label htmlFor="gameNameInput">Game Name:</label>
+        {!uniqueName && <p>Game name in use! Please choose new name</p>}
         <input
           type="text"
           name="gameName"
@@ -110,6 +130,7 @@ const HostModal = ({ isOpen, closeModal, user }) => {
         </select>
 
         <button type="submit">Create Game</button>
+
       </form>
 
     </div>

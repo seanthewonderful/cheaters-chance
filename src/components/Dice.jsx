@@ -12,9 +12,9 @@ const Dice = ({turn, self}) => {
   const [allDice, setAllDice] = useState({'1': 0, '2': 0, '3': 0, '4': 0,'5': 0, '6': 0})
   const [showRoller, setShowRoller] = useState(true)
 
-  useEffect(() => {
-    console.log(allDice)
-  }, [allDice])
+  // useEffect(() => {
+  //   console.log(allDice)
+  // }, [allDice])
 
   useEffect(() => {
     socket.on('room data', (res) => {

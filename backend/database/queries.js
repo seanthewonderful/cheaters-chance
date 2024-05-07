@@ -1,9 +1,7 @@
 import { db, User, Game, Player } from './model.js';
 
-const game = await Game.findOne({
-  where: {
-    gameId: 28
-  },
+
+let game = await Game.findByPk(7, {
   include: {
     model: Player,
     include: {

@@ -40,11 +40,6 @@ const router = createBrowserRouter(
           errorElement={<NotFound />}
         />
         <Route
-          path="game"
-          element={<Game />}
-          errorElement={<NotFound />}
-        />
-        <Route
           path="rules"
           element={<Rules />}
           errorElement={<NotFound />}
@@ -55,6 +50,11 @@ const router = createBrowserRouter(
           errorElement={<NotFound />}
         />
       </Route>
+        <Route
+          path="/game"
+          element={<Game />}
+          errorElement={<NotFound />}
+        />
     </>
   )
 )

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios'
 
 import socket from '../functions/socket.js'
@@ -9,6 +9,7 @@ import socket from '../functions/socket.js'
 const JoinModal = ({ game, toggleModal }) => {
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const [password, setPassword] = useState('')
 
@@ -22,16 +23,35 @@ const JoinModal = ({ game, toggleModal }) => {
     })
 
     socket.on('join game hit', (res) => {
+      console.log("FOUND GAME ID: ", res.data.foundGame.gameId)
+      dispatch({
+        type: 'SET_GAME',
+        payload: res.data.foundGame
+      })
       navigate(`/scuttlebutt/lobby/${res.data.foundGame.gameId}`)
+    })
+
+    socket.on('join failure', (res) => {
+      console.log('join failure hit')
+      alert(res.message)
+      toggleModal()
     })
 
   }, [socket])
 
   const onSubmit = () => {
     if (game.password !== 'default') {
-      socket.emit('join game', { name: game.name, password: password, userId })
+      socket.emit('join game', { 
+        gameId: game.gameId, 
+        password: password, 
+        userId: userId 
+      })
     } else {
-      socket.emit('join game', { name: game.name, password: 'default', userId })
+      socket.emit('join game', { 
+        gameId: game.gameId, 
+        password: 'default', 
+        userId: userId 
+      })
     }
   }
 
