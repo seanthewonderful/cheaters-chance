@@ -95,7 +95,10 @@ io.on('connection', async (socket) => {
 
   socket.on('start game', async (body) => {
     const gameData = await startGame(body.gameId)
-    io.to(gameData.gameId).emit('game initialized', gameData)
+    io.to(gameData.gameId).emit('game initialized', {
+      message: "game initialized",
+      gameData: gameData
+    })
   })
 
   socket.on('get room', async (body) => {

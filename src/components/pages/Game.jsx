@@ -1,20 +1,22 @@
 import Player from '../Player'
 import Opponent from '../Opponent'
-import socket from '../../functions/socket'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Dice from '../Dice.jsx'
 
+import socket from '../../functions/socket'
+
 const Game = () => {
 
   const navigate = useNavigate()
-  const [isMounted, setIsMounted] = useState(false)
+  const dispatch = useDispatch()
 
   const user = useSelector(state => state.user)
   const initialGameData = useSelector(state => state.game)
 
   const [gameData, setGameData] = useState(initialGameData)
+  const [isMounted, setIsMounted] = useState(false)
 
   const [bet, setBet] = useState({
     count: gameData.currentCount,
@@ -57,37 +59,41 @@ const Game = () => {
       setGameData(res.gameData)
     })
 
-    // socket.on('player disconnected', (res) => {
-    //   console.log(res.message, res.playerName)
-    //   setGameData(res.gameData)
-    // })
+    socket.on('player disconnected', (res) => {
+      console.log('GAME ', res.message, res.playerName, res.gameData)
+      dispatch({
+        type: 'SET_GAME',
+        payload: res.gameData
+      })
+      setGameData(res.gameData)
+    })
 
   }, [])
   
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setIsMounted(true)
-  //   }, 1000)
+  useEffect(() => {
+    setTimeout(() => {
+      setIsMounted(true)
+    }, 1000)
 
-  //   console.log("INITIAL RENDER")
+    console.log("INITIAL RENDER")
 
-  //   const handleUnload = () => {
-  //     socket.emit('player disconnect', { 
-  //       playerId: self.playerId,
-  //       gameId: gameData.gameId
-  //     });
-  //   };
+    const handleUnload = () => {
+      socket.emit('player disconnect', { 
+        playerId: self.playerId,
+        gameId: gameData.gameId
+      });
+    };
 
-  //   window.addEventListener('beforeunload', handleUnload);
+    window.addEventListener('beforeunload', handleUnload);
 
-  //   return () => {
-  //     if (isMounted) {
-  //       console.log("CLEANUP FUNCTION")
-  //       handleUnload()
-  //     }
-  //   }
+    return () => {
+      if (isMounted) {
+        console.log("GAME CLEANUP FUNCTION")
+        handleUnload()
+      }
+    }
     
-  // }, [isMounted])
+  }, [isMounted])
 
 
   const liar = () => {

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import socket from '../../functions/socket.js'
-import Game from './Game.jsx'
+// import Game from './Game.jsx'
 
 const Lobby = () => {
 
@@ -12,8 +12,9 @@ const Lobby = () => {
 
   const [gameData, setGameData] = useState(initialGameData)
   const [amHost, setAmHost] = useState(false)
-  const [inGame, setInGame] = useState(false)
+  // const [inGame, setInGame] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const [lobbyStatus, setLobbyStatus] = useState('initializing')
 
   const { gameId } = useParams()
 
@@ -33,15 +34,11 @@ const Lobby = () => {
   }
 
   const startGame = () => {
+    setLobbyStatus('startingGame')
     socket.emit('start game', gameData)
   }
 
   useEffect(() => {
-    // socket.emit('get room', { gameId })
-
-    // socket.on('room data', (res) => {
-    //   setGameData(res.data)
-    // })
 
     socket.on('new player', (res) => {
       setGameData(res.data.foundGame)
@@ -55,14 +52,14 @@ const Lobby = () => {
       console.log('game initialized hit', res)
       dispatch({
         type: 'SET_GAME',
-        payload: res
+        payload: res.gameData
       })
-      // navigate(`/game`)
-      setInGame(true)
+      navigate(`/game`)
+      // setInGame(true)
     })
 
     socket.on('player disconnected', (res) => {
-      console.log(res.message, res.playerName)
+      console.log("LOBBY ",res.message, res.playerName, res.gameData)
       dispatch({
         type: 'SET_GAME',
         payload: res.gameData
@@ -72,14 +69,17 @@ const Lobby = () => {
 
   }, [])
 
+  // Each time gameData changes, figure out if user is host
   useEffect(() => {
     figureIfHost()
   }, [gameData])
 
+  // If user navigates away from page, emit player disconnect
   useEffect(() => {
-    setTimeout(() => {
-      setIsMounted(true)
-    }, 1)
+    // setTimeout(() => {
+    //   setIsMounted(true)
+    // }, 1)
+    setLobbyStatus('waiting')
 
     console.log("INITIAL RENDER")
 
@@ -93,13 +93,14 @@ const Lobby = () => {
     window.addEventListener('beforeunload', handleUnload);
 
     return () => {
-      if (isMounted) {
-        console.log("CLEANUP FUNCTION")
+      if (lobbyStatus === 'waiting') {
+        window.removeEventListener('beforeunload', handleUnload)
+        console.log("LOBBY CLEANUP FUNCTION")
         handleUnload()
       }
     }
     
-  }, [isMounted])
+  }, [])
 
   const allPlayers = gameData.players ? gameData.players.map((el, i) => {
     return <section key={i}>
@@ -111,9 +112,7 @@ const Lobby = () => {
     []
 
 
-  return inGame ? (
-      <Game />
-    ) : (
+  return (
       <div>Lobby
 
         <section id='host-start-section'>
