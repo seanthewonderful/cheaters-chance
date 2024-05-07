@@ -23,11 +23,7 @@ const Game = () => {
   })
 
   const self = gameData.players.filter(player => player.user.userId === user.userId)[0]
-  console.log(self)
   const [myTurn, setMyTurn] = useState(gameData.players[gameData.turn].user.userId === self.user.userId)
-  console.log(gameData.players[gameData.turn].user.userId)
-  console.log(self.user.userId)
-
 
   const opponents = gameData.players
     .filter(player => player.user.userId !== user.userId)

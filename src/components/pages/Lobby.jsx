@@ -87,8 +87,9 @@ const Lobby = () => {
     window.addEventListener('beforeunload', handleUnload);
 
     return () => {
+      window.removeEventListener('beforeunload', handleUnload)
+      
       if (lobbyStatus === 'waiting') {
-        window.removeEventListener('beforeunload', handleUnload)
         console.log("LOBBY CLEANUP FUNCTION")
         handleUnload()
       }
