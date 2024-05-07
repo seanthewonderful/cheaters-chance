@@ -29,8 +29,16 @@ const Lobby = () => {
     }
   }
 
+  const handleUnload = () => {
+    socket.emit('player disconnect', { 
+      playerId: self.playerId,
+      gameId: gameData.gameId
+    });
+  };
+
   const startGame = () => {
     setLobbyStatus('startingGame')
+    window.removeEventListener('beforeunload', handleUnload)
     socket.emit('start game', gameData)
   }
 
@@ -77,18 +85,11 @@ const Lobby = () => {
 
     console.log("LOBBY INITIAL RENDER")
 
-    const handleUnload = () => {
-      socket.emit('player disconnect', { 
-        playerId: self.playerId,
-        gameId: gameData.gameId
-      });
-    };
-
     window.addEventListener('beforeunload', handleUnload);
 
     return () => {
       window.removeEventListener('beforeunload', handleUnload)
-      
+
       if (lobbyStatus === 'waiting') {
         console.log("LOBBY CLEANUP FUNCTION")
         handleUnload()
