@@ -17,13 +17,17 @@ const Game = () => {
 
   const [gameData, setGameData] = useState(initialGameData)
   const [isMounted, setIsMounted] = useState(false)
-
   const [bet, setBet] = useState({
     count: gameData.currentCount,
     value: gameData.currentValue === 0 ? 1 : gameData.currentValue
   })
 
   const self = gameData.players.filter(player => player.user.userId === user.userId)[0]
+  console.log(self)
+  const [myTurn, setMyTurn] = useState(gameData.players[gameData.turn].user.userId === self.user.userId)
+  console.log(gameData.players[gameData.turn].user.userId)
+  console.log(self.user.userId)
+
 
   const opponents = gameData.players
     .filter(player => player.user.userId !== user.userId)
@@ -69,13 +73,18 @@ const Game = () => {
     })
 
   }, [])
+
+  useEffect(() => {
+    // Figure out if it's my turn after new gameData
+    setMyTurn(gameData.players[gameData.turn].user.userId === self.user.userId)
+  }, [gameData])
   
   useEffect(() => {
     setTimeout(() => {
       setIsMounted(true)
     }, 1000)
 
-    console.log("INITIAL RENDER")
+    console.log("GAME INITIAL RENDER")
 
     const handleUnload = () => {
       socket.emit('player disconnect', { 
@@ -88,6 +97,7 @@ const Game = () => {
 
     return () => {
       if (isMounted) {
+        window.removeEventListener('beforeunload', handleUnload);
         console.log("GAME CLEANUP FUNCTION")
         handleUnload()
       }
@@ -130,7 +140,8 @@ const Game = () => {
       </section>
       <section>
         {<Player player={self} />}
-        {gameData.turn === self.turn ? (
+        {/* {gameData.turn === self.turn ? ( */}
+        {myTurn ? (
           <>
             <h3>Bet:</h3>
             Count:

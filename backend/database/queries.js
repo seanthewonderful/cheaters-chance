@@ -1,8 +1,7 @@
 import { db, User, Game, Player } from './model.js';
 
-let game = await Game.findOne()
-await game.removePlayer(2)
-game = await Game.findByPk(1, {
+
+let game = await Game.findByPk(7, {
   include: {
     model: Player,
     include: {

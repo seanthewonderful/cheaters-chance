@@ -12,11 +12,7 @@ const Lobby = () => {
 
   const [gameData, setGameData] = useState(initialGameData)
   const [amHost, setAmHost] = useState(false)
-  // const [inGame, setInGame] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
   const [lobbyStatus, setLobbyStatus] = useState('initializing')
-
-  const { gameId } = useParams()
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -76,12 +72,10 @@ const Lobby = () => {
 
   // If user navigates away from page, emit player disconnect
   useEffect(() => {
-    // setTimeout(() => {
-    //   setIsMounted(true)
-    // }, 1)
+
     setLobbyStatus('waiting')
 
-    console.log("INITIAL RENDER")
+    console.log("LOBBY INITIAL RENDER")
 
     const handleUnload = () => {
       socket.emit('player disconnect', { 
