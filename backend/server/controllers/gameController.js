@@ -57,7 +57,7 @@ const gameFunctions = {
       await game.createPlayer({
         userId: userId,
         dice: startingDice,
-        turn: 0
+        // turn: 0
       })
 
       game = await Game.findOne({
@@ -156,7 +156,7 @@ const gameFunctions = {
         const player = await foundGame.createPlayer({
           userId: body.userId,
           dice: foundGame.startingDice,
-          turn: foundGame.players.length
+          // turn: foundGame.players.length
         })
 
         foundGame = await Game.findOne({
@@ -259,6 +259,16 @@ const gameFunctions = {
   removePlayerFromGame: async (body) => {
     let game = await Game.findByPk(body.gameId)
     await game.removePlayer(body.playerId)
+
+    game = await Game.findByPk(body.gameId, {
+      include: {
+        model: Player
+      }
+    })
+
+    let turn = game.turn >= game.players.length - 1 ? 0 : game.turn
+
+    await game.update({ turn: turn })
 
     game = await Game.findByPk(body.gameId, {
       include: {

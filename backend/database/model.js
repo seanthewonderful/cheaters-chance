@@ -133,10 +133,10 @@ Player.init({
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  turn: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
+  // turn: {
+  //   type: DataTypes.INTEGER,
+  //   allowNull: false
+  // },
   one: {
     type: DataTypes.INTEGER,
     allowNull: false,
